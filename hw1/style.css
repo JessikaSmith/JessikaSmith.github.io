@@ -1,0 +1,24 @@
+body {
+  max-width: 960px
+}
+
+@font-face {
+font-family: "Open Sans";
+src: url("https://fonts.google.com/specimen/Open+Sans?selection.family=Open+Sans");
+}
+
+h1 {
+  color: #1946ba;
+  font-family: "Open Sans";
+
+}
+
+button{
+  background-color: #ec0b43;
+  color: white;
+  border: 0px;
+}
+
+.boxed {
+  border: 1px solid green ;
+}
