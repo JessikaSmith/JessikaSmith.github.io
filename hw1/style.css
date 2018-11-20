@@ -1,24 +1,35 @@
 body {
-  max-width: 960px
-}
-
-@font-face {
-font-family: "Open Sans";
-src: url("https://fonts.google.com/specimen/Open+Sans?selection.family=Open+Sans");
+  max-width: 960px;
+  font-family: 'Open Sans', sans-serif;
+  margin-left: 5%;
 }
 
 h1 {
   color: #1946ba;
-  font-family: "Open Sans";
+  font-weight: 500;
+}
 
+h2{
+  margin-left: 1%;
+  font-weight: 500;
 }
 
 button{
   background-color: #ec0b43;
+  padding: 10px 15px;
+  text-align: center;
   color: white;
+  width: 20%;
+  height: 20%;
   border: 0px;
 }
 
+.changeable_quote{
+  border-left: 1.5px solid;
+  margin-left: 4%;
+  padding-left: 10px;
+}
+
 .boxed {
-  border: 1px solid green ;
+  border: 2px solid #F5F5F5 ;
 }
