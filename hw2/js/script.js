@@ -1,6 +1,6 @@
 var paragraphs = d3.select("p");
 paragraphs.style("color", "steelblue");
-d3.json("https://drive.google.com/file/d/0B5VL9rmGVa8XNFdZT0V1clp0WHc/view?usp=sharing", function(error, data){
+d3.json("js/countries_2012.json", function(error, data){
   var columns = Object.keys(data[0]);
 
         var table = d3.select("body").append("table"),
