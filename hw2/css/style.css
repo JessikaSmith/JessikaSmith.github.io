@@ -1,0 +1,8 @@
+tr:nth-of-type(odd) {
+  background-color: #eee;
+}
+
+table{
+  width: 60%;
+  border-collapse: collapse;
+}
