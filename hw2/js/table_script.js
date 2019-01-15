@@ -20,14 +20,14 @@ function f() {
     };
 }
 
-// defining columns and format
+// column definitions
 const columns = [
-    {head: 'Name', cl: 'title', html: f('Name')},
-    {head: 'Continent', cl: 'center', html: f('Continent')},
-    {head: 'GDP', cl: 'num', html: f('GDP', d3.format(',.3s'))},
-    {head: 'Life Expectancy', cl: 'center', html: f('Life Expectancy', d3.format('.1f'))},
-    {head: 'Population', cl: 'num', html: f('Population', d3.format(',.0f'))},
-    {head: 'Year', cl: 'center', html: f('Year', d3.format('.0f'))}
+    { head: 'Name', cl: 'title', html: f('Name') },
+    { head: 'Continent', cl: 'center', html: f('Continent') },
+    { head: 'GDP', cl: 'num', html: f('GDP', d3.format(',.3s')) },
+    { head: 'Life Expectancy', cl: 'center', html: f('Life Expectancy', d3.format('.1f')) },
+    { head: 'Population', cl: 'num', html: f('Population', d3.format(',.0f')) },
+    { head: 'Year', cl: 'center', html: f('Year', d3.format('.0f')) }
 ];
 
 
@@ -46,8 +46,7 @@ function prepare_columns(columns){
 
 function table_show(data){
 
-  var sortAscending = true;
-  var table = d3.select("body").append("table"),
+  const table = d3.select("body").append("table"),
   thead = table.append("thead")
               .attr("class", "thead");
   tbody = table.append("tbody");
@@ -61,54 +60,39 @@ function table_show(data){
     .append("th")
     .text(function(d) {
       return d.head;
-    })
-    .on("click", function(header, d) {
-
-      tbody.selectAll("tr").sort(function(a, b) {
-        return d3.descending(a[header], b[header]);
-      });
-
-      if (sortAscending){
-         rows.sort(function(a, b) { return b[d] < a[d]; });
-         sortAscending = false;
-         this.className = 'aes';
-       } else {
-    	 rows.sort(function(a, b) { return b[d] > a[d]; });
-    	 sortAscending = true;
-    	 this.className = 'des';
-       }
-
+    });
+  headers.on("click", function(header) {
+      tbody.selectAll("tr.row").sort(function(a, b) {
+        return d3.descending(a[header.head], b[header.head]);
+      })
     });
 
     var rows = tbody.selectAll("tr.row")
         .data(data)
         .enter()
-        .append("tr").attr("class", "row");
+        .append("tr")
+        .attr("class", "row");
 
-
-    // var rows = tbody.selectAll("tr.row")
-    //     .data(data)
-    //     .enter()
-    //     .append("tr").attr("class", "row");
-
+// according to https://www.vis4.net/blog/2015/04/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
     var cells = rows.selectAll('td')
         .data(function(row, i) {
-          return columns.map(function (c) {
-            const cell = {};
-            d3.keys(c).forEach(function (k) {
-              cell[k] = typeof c[k] == 'function' ? c[k](row, i) : c[k];
+            return columns.map(function(c){
+              var cell = {};
+              d3.keys(c).forEach(function(k){
+                cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+              });
+              return cell;
             });
-            return cell;
-          });
-        })
+          })
         .enter()
         .append('td')
         .html(f('html'))
         .attr('class', f('cl'));
-    const t1 = tbody.selectAll('tr.row').selectAll('td');
-
   };
 
+  function stringCompare(a, b) {
+      return a > b ? 1 : a == b ? 0 : -1;
+  }
 
 d3.json("http://localhost:8000/json_files/countries_2012.json", function(error, data){
     table_show(prepare_columns(data));
