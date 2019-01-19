@@ -30,7 +30,6 @@ const columns = [
     { head: 'Year', cl: 'center', html: f('Year', d3.format('.0f')) }
 ];
 
-
 function prepare_columns(columns){
   return columns.map(function (t){
     return{
@@ -42,29 +41,52 @@ function prepare_columns(columns){
       'Year': t.year
       };
     });
-  }
+  };
+
+var sortVar = {
+  key: 'header',
+  order: d3.ascending
+};
+
 
 function table_show(data){
 
-  const table = d3.select("body").append("table"),
-  thead = table.append("thead")
+  var table = d3.select("body").append("table");
+  var thead = table.append("thead")
               .attr("class", "thead");
-  tbody = table.append("tbody");
+  var tbody = table.append("tbody");
 
   table.append("caption")
               .html("World Countries Ranking");
 
-  const headers = thead.append("tr").selectAll("th")
+  const headers = thead.append("tr")
+    .selectAll("th")
     .data(columns)
     .enter()
     .append("th")
     .text(function(d) {
       return d.head;
     });
-  headers.on("click", function(header) {
-      tbody.selectAll("tr.row").sort(function(a, b) {
-        return d3.descending(a[header.head], b[header.head]);
-      })
+
+    headers.on("click", function(header) {
+      headers.attr('class', 'header');
+        if (sortVar.order.toString()==d3.ascending.toString()){
+          sortVar.order = d3.descending;
+          console.log(sortVar);
+          console.log('YES');
+          tbody.selectAll("tr.row").sort(function(a, b) {
+          return d3.ascending(a[header.head], b[header.head]);
+        })
+        this.className = 'desc';
+      }
+        else{
+          sortVar.order = d3.ascending;
+          console.log('NO');
+          tbody.selectAll("tr.row").sort(function(a, b) {
+          return d3.descending(a[header.head], b[header.head]);
+        })
+        this.ClassName = 'asc';
+      };
     });
 
     var rows = tbody.selectAll("tr.row")
@@ -89,10 +111,6 @@ function table_show(data){
         .html(f('html'))
         .attr('class', f('cl'));
   };
-
-  function stringCompare(a, b) {
-      return a > b ? 1 : a == b ? 0 : -1;
-  }
 
 d3.json("http://localhost:8000/json_files/countries_2012.json", function(error, data){
     table_show(prepare_columns(data));

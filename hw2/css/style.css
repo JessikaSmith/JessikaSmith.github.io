@@ -26,5 +26,10 @@ th.num, td.num {
 
 table{
   width: 70%;
-  border-collapse: collapse;
+  border: 1px;
+  /* border-collapse: collapse; */
+}
+
+table th:not((.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+    content: " \25B4\25BE"
 }

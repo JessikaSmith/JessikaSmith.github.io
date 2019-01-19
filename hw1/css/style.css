@@ -14,6 +14,12 @@ h2{
   font-weight: 500;
 }
 
+.btn-group{
+  display: block;
+  vertical-align: middle;
+  line-height: 50px;
+}
+
 button{
   background-color: #ec0b43;
   padding: 10px 15px;

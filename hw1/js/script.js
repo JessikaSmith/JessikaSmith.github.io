@@ -28,3 +28,19 @@ function newQuoteFunction(){
   xmlhttp.open("GET", path_to_json, true);
   xmlhttp.send();
 }
+
+// author selection
+function getAuthor(){
+  var author_list = document.getElementById('dropdown-content');
+  arr = ["html","css","java","javascript","php","c++","node.js","ASP","JSP","SQL"];
+
+    for(var i = 0; i < arr.length; i++)
+    {
+      var option = document.createElement("OPTION"),
+      txt = document.createTextNode(arr[i]);
+      option.appendChild(txt);
+      option.setAttribute("value",arr[i]);
+      author_list.appendChild(option);
+    }
+
+}
