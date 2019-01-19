@@ -43,11 +43,19 @@ function prepare_columns(columns){
     });
   };
 
-var sortVar = {
-  key: 'header',
-  order: d3.ascending
-};
+// TODO rewrite to loop
+var sortVar = [
+  { key: 'Name', order: d3.ascending },
+  { key: 'Continent', order: d3.ascending },
+  { key: 'GDP', order: d3.ascending },
+  { key: 'Life Expectancy', order: d3.ascending },
+  { key: 'Population', order: d3.ascending },
+  { key: 'Year', order: d3.ascending }
+];
 
+var continentNames = [
+"Africa", "Americas", "Asia", "Europe", "Oceania"
+];
 
 function table_show(data){
 
@@ -70,22 +78,30 @@ function table_show(data){
 
     headers.on("click", function(header) {
       headers.attr('class', 'header');
-        if (sortVar.order.toString()==d3.ascending.toString()){
-          sortVar.order = d3.descending;
-          console.log(sortVar);
-          console.log('YES');
+      var obj = sortVar.find(x => x.key === header.head);
+        if (obj.order.toString()==d3.ascending.toString()){
           tbody.selectAll("tr.row").sort(function(a, b) {
-          return d3.ascending(a[header.head], b[header.head]);
-        })
-        this.className = 'desc';
-      }
+            var result = d3.ascending(a[header.head], b[header.head]);
+            obj.order = d3.descending;
+            if (header.head==='Continent'){
+              return d3.ascending(a[header.head], b[header.head]) || d3.ascending(a["Name"], b["Name"])
+            }
+            else{
+              return result
+            }
+          });
+            this.className = 'asc';
+          }
         else{
-          sortVar.order = d3.ascending;
-          console.log('NO');
           tbody.selectAll("tr.row").sort(function(a, b) {
-          return d3.descending(a[header.head], b[header.head]);
-        })
-        this.ClassName = 'asc';
+            var result = d3.descending(a[header.head], b[header.head]);
+            obj.order = d3.ascending;
+            if (header.head==="Continent"){
+              return d3.descending(a[header.head], b[header.head]) || d3.ascending(a["Name"], b["Name"])
+            }
+            else return result
+        });
+        this.ClassName = 'desc';
       };
     });
 
@@ -94,6 +110,8 @@ function table_show(data){
         .enter()
         .append("tr")
         .attr("class", "row");
+
+        console.log(rows);
 
 // according to https://www.vis4.net/blog/2015/04/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
     var cells = rows.selectAll('td')
@@ -112,6 +130,68 @@ function table_show(data){
         .attr('class', f('cl'));
   };
 
+// Filtering tools
+
+d3.select('#checkbox')
+  .selectAll('input')
+  .data(continentNames)
+  .enter()
+  .append("label")
+  .append("input")
+  .attr("type", "checkbox")
+  .attr("class","checkbox_check")
+  .attr("value", function (d){
+    return d
+  })
+  .attr("id", function (d){
+    return d
+  });
+
+d3.selectAll("label")
+  .data(continentNames)
+  .attr("class", "checkbox")
+  .append("text").text(function (d){
+    return " " + d
+  })
+
+filterCol = 'Continent';
+
+var checkBox = d3.selectAll(".checkbox_check");
+
+function update(){
+  var choices = [];
+  d3.selectAll(".checkbox_check").each(function(d){
+    box = d3.select(this);
+    if (box.property("checked")){
+      choices.push(box.property("value"));
+    }
+  });
+  if (choices.length > 0){
+    newData = table.filter(function(d, i){
+      return choices.includes(d);
+    })
+  }
+  else {
+    newData = data;
+  }
+
+  newRows = table.selectAll(tr.row)
+    .data(newData, function(d){
+      return d;
+    });
+    newRows.enter()
+      .append("tr.rows")
+      .append("td")
+      .text(function(d){
+        return d;
+      });
+    newRows.exit()
+      .remove();
+}
+
+checkBox.on("change", update);
+
+// Looking at the resulting table
 d3.json("http://localhost:8000/json_files/countries_2012.json", function(error, data){
     table_show(prepare_columns(data));
   });

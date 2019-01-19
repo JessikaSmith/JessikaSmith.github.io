@@ -30,6 +30,18 @@ table{
   /* border-collapse: collapse; */
 }
 
-table th:not((.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+#checkbox {
+    display: inline-block;
+}
+
+tr:hover td { background-color: #edf8b1; }
+
+table, th, td { border: 1px solid lightgray; }
+
+table {
+  border-collapse: collapse;
+}
+
+table th:not((.asc):not(.desc):not(.sorttable_nosort):after {
     content: " \25B4\25BE"
 }
