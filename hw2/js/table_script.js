@@ -1,44 +1,29 @@
-function f() {
-    var entries = arguments;
-    var i = 0;
-    var l = entries.length;
-    while (i < l) {
-        if (typeof(entries[i]) === 'string' || typeof(entries[i]) === 'number') {
-            entries[i] = (function (str) {
-                return function (d) {
-                    return d[str];
-                };
-            })(entries[i]);
-        }
-        i++;
-    }
-    return function (d) {
-        var i = 0;
-        l = entries.length;
-        while (i++ < l) d = entries[i - 1].call(this, d);
-        return d;
-    };
-}
 
 // column definitions
 const columns = [
-    { head: 'Name', cl: 'title', html: f('Name') },
+    { head: 'Name', cl: 'center', html: f('Name') },
     { head: 'Continent', cl: 'center', html: f('Continent') },
-    { head: 'GDP', cl: 'num', html: f('GDP', d3.format(',.3s')) },
-    { head: 'Life Expectancy', cl: 'center', html: f('Life Expectancy', d3.format('.1f')) },
+    { head: 'GDP', cl: 'num', html: f('GDP', d3.format(',.2s')) },
+    { head: 'Life Expectancy', cl: 'num', html: f('Life Expectancy', d3.format('.1f')) },
     { head: 'Population', cl: 'num', html: f('Population', d3.format(',.0f')) },
-    { head: 'Year', cl: 'center', html: f('Year', d3.format('.0f')) }
+    { head: 'Year', cl: 'num', html: f('Year', d3.format('.0f')) }
 ];
 
+// get information from nested json
 function prepare_columns(columns){
+  console.log(columns);
   return columns.map(function (t){
     return{
       'Name': t.name,
       'Continent': t.continent,
-      'GDP': t.gdp,
-      'Life Expectancy': t.life_expectancy,
-      'Population': t.population,
-      'Year': t.year
+      'Years': t.years.map(function (y){
+        return{
+          'GDP': y.gdp,
+          'Life Expectancy': y.life_expectancy,
+          'Population': y.population,
+          'Year': y.year
+        }
+      })
       };
     });
   };
@@ -53,13 +38,61 @@ var sortVar = [
   { key: 'Year', order: d3.ascending }
 ];
 
+
 var continentNames = [
 "Africa", "Americas", "Asia", "Europe", "Oceania"
 ];
 
+// set data format
+function f() {
+    var entries = arguments;
+    var i = 0;
+    var len = entries.length;
+    while (i < len) {
+        if (typeof(entries[i]) === 'string' || typeof(entries[i]) === 'number') {
+            entries[i] = (function (str) {
+                return function (d) {
+                    return d[str];
+                };
+            })(entries[i]);
+        }
+        i++;
+    }
+    return function (d) {
+        var i = 0;
+        len = entries.length;
+        while (i++ < len){
+          d = entries[i - 1].call(this, d);
+        }
+        return d;
+    };
+}
+
+function getYear(data, year){
+  var y = d3.select('input[type=range]').node().valueAsNumber;
+  if (data === undefined) {
+        data = tableData;
+    }
+    if (year === undefined) {
+        year = y;
+    }
+  return data.map(function (t) {
+    console.log(t.Years[year - 1995]);
+    return {
+        'Name': t.Name,
+        'Continent': t.Continent,
+        'GDP': t.Years[year - 1995].gdp,
+        'Life Expectancy': t.Years[year - 1995]['Life Expectancy'],
+        'Population': t.Years[year - 1995].Population,
+        'Year': year
+    }
+  });
+}
+
 function table_show(data){
 
-  var table = d3.select("body").append("table");
+  var table = d3.select("body").append("table")
+              .attr("class", "newTable");
   var thead = table.append("thead")
               .attr("class", "thead");
   var tbody = table.append("tbody");
@@ -111,10 +144,9 @@ function table_show(data){
         .append("tr")
         .attr("class", "row");
 
-        console.log(rows);
-
 // according to https://www.vis4.net/blog/2015/04/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
-    var cells = rows.selectAll('td')
+    var cells = tbody.selectAll('tr.row')
+        .selectAll('td')
         .data(function(row, i) {
             return columns.map(function(c){
               var cell = {};
@@ -132,66 +164,83 @@ function table_show(data){
 
 // Filtering tools
 
-d3.select('#checkbox')
-  .selectAll('input')
-  .data(continentNames)
-  .enter()
-  .append("label")
-  .append("input")
-  .attr("type", "checkbox")
-  .attr("class","checkbox_check")
-  .attr("value", function (d){
-    return d
-  })
-  .attr("id", function (d){
-    return d
-  });
-
-d3.selectAll("label")
-  .data(continentNames)
-  .attr("class", "checkbox")
-  .append("text").text(function (d){
-    return " " + d
-  })
-
-filterCol = 'Continent';
-
-var checkBox = d3.selectAll(".checkbox_check");
-
-function update(){
-  var choices = [];
-  d3.selectAll(".checkbox_check").each(function(d){
-    box = d3.select(this);
-    if (box.property("checked")){
-      choices.push(box.property("value"));
+function filterRows(data){
+  if (data === undefined) {
+        data = getYear(tableData, 200);
+    }
+  cb = [];
+  d3.selectAll("input[type=checkbox]").each(function(d){
+    if (d3.select(this).property("checked")){
+      cb.push(d3.select(this).property("value"));
     }
   });
-  if (choices.length > 0){
-    newData = table.filter(function(d, i){
-      return choices.includes(d);
+  if (cb.length > 0){
+    filteredData = data.filter(function(d, i){
+      return filteredData.includes(d.Continent);
     })
   }
   else {
-    newData = data;
+    filteredData = data;
   }
-
-  newRows = table.selectAll(tr.row)
-    .data(newData, function(d){
-      return d;
-    });
-    newRows.enter()
-      .append("tr.rows")
-      .append("td")
-      .text(function(d){
-        return d;
-      });
-    newRows.exit()
-      .remove();
+  return filteredData;
 }
 
-checkBox.on("change", update);
+// aggregation tools
+
+function aggregator(data) {
+  var agg = d3.select('input[name="aggregate"]:checked').node().value;
+  var n = 0;
+  if (agg == "agg"){
+    nests = d3.nest()
+    .key(function (d){
+      return d.Continent
+    })
+    .rollup(function(d){
+      return{
+        'Name': d[0].Continent,
+        'Continent': d[0].Continent,
+        'GDP': d3.sum(d, function(g){
+          return +g.GDP;
+        }),
+        'Life Expectancy': d3.mean(d, function(g){
+          return +g['Life Expectancy'];
+        }),
+        'Population': d3.sum(d, function (g){
+          return +g.Population;
+        }),
+        'Year': d[0].Year
+      };
+    })
+    .entries(data);
+    arr = function (d){
+      var tmp = [];
+      for (let i = 0; i < d.length; i++){
+        tmp.push(d[i].value)
+      }
+      return tmp;
+    };
+    return arr(nests);
+  }
+  else{
+    return data;
+  }
+}
 
 // Looking at the resulting table
-d3.json("http://localhost:8000/json_files/countries_2012.json", function(error, data){
-    table_show(prepare_columns(data));
-  });
+var url = "http://localhost:8000/json_files/data.json"
+d3.json(url, function(error, data){
+  tableData = prepare_columns(data);
+  yearsData = getYear(tableData);
+  table_show(yearsData);
+});
+
+function update (){
+  filterRows()
+}
+
+d3.selectAll("input[type=range]").on("change", function(){
+  update(filterRows(aggregator(getYear())));
+
+});
+
+// d3.json(url, prepare_columns)
