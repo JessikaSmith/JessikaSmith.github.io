@@ -1,0 +1,47 @@
+body{
+  font-family: 'Helvetica Neue', Helvetica;
+  font-weight: 300;
+  padding: 20px;
+}
+
+tr:nth-of-type(odd) {
+  background-color: #eee;
+}
+
+th{
+  text-align: left;
+}
+
+th, td {
+  padding: 0 1em 0.5ex 0;
+}
+
+th.center, td.center {
+  text-align: center;
+}
+
+th.num, td.num {
+  text-align: right;
+}
+
+table{
+  width: 70%;
+  border: 1px;
+  /* border-collapse: collapse; */
+}
+
+#checkbox {
+    display: inline-block;
+}
+
+tr:hover td { background-color: #edf8b1; }
+
+table, th, td { border: 1px solid lightgray; }
+
+table {
+  border-collapse: collapse;
+}
+
+table th:not((.asc):not(.desc):not(.sorttable_nosort):after {
+    content: " \25B4\25BE"
+}
