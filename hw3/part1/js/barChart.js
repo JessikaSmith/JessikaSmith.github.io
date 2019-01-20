@@ -13,12 +13,17 @@ class BarChart {
         this.allData = allData;
     }
 
+    clearBarchart(){
+      d3.select("svg")
+        .selectAll("g")
+        .remove()
+      d3.selectAll('.axis')
+        .remove()
+    }
     /**
      * Render and update the bar chart based on the selection of the data type in the drop-down box
      */
     updateBarChart(selectedDimension) {
-
-
 
         // ******* TODO: PART I *******
 
@@ -26,13 +31,22 @@ class BarChart {
         // Create the x and y scales; make
         // sure to leave room for the axes
 
-        // Create colorScale
+        var years = this.allData.map(function(d){
+            return d.year;
+        })
 
-        // Create the axes (hint: use #xAxis and #yAxis)
+        var w = d3.select("#barChart").attr("width");
+        var h = d3.select("#barChart").attr("height");
+        var margin = {top: 5, right: 5, bottom: 50, left: 55};
+        var svg = d3.select('#barChart')
+          .attr('width', w)
+          .attr('height', h)
+          .attr('transform', 'translate(' + margin.right + ',' + margin.top + ')');
 
-        // Create the bars (hint: use #bars)
-
-
+        var yearScale = d3.scaleBand()
+          .domain(years)
+          .range([0, (w-margin.left-margin.right)])
+          .paddingInner(0.1);
 
 
         // ******* TODO: PART II *******
@@ -56,6 +70,8 @@ class BarChart {
         // ******* TODO: PART I *******
         //Changed the selected data when a user selects a different
         // menu item from the drop down.
+        this.clearBarchart()
+        this.updateBarchart(selectedDimension)
 
     }
 }

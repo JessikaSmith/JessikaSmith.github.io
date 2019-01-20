@@ -52,3 +52,7 @@ rect{
   fill:teal;
   fill-opacity:.8
 }
+
+svg {
+  margin: 20px auto;
+}
