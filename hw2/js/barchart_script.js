@@ -7,6 +7,11 @@
 //     { head: 'Year', cl: 'right', html: f('Year', d3.format('.0f')) }
 // ];
 
+function colors(n) {
+  var colores_g = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+  return colores_g[n % colores_g.length];
+}
+
 // get information from nested json
 function prepare_columns(columns){
   console.log(columns);
@@ -28,8 +33,6 @@ function prepare_columns(columns){
 
   function getYear(data, year){
     var y = d3.select('input[type=range]').node().valueAsNumber;
-    console.log(data);
-    console.log(year);
     if (data === undefined) {
       data = tableData;
     }
@@ -50,57 +53,66 @@ function prepare_columns(columns){
 
 function initBarchartVars(data){
   margin = {top: 50, bottom: 10, left:300, right: 40};
+  textW = 200;
+  barH = 20;
   width = 900 - margin.left - margin.right;
-  height = 900 - margin.top - margin.bottom;
-
+  height = barH*data.length - margin.top - margin.bottom;
   xScale = d3.scaleLinear().range([0, width]);
   yScale = d3.scaleBand().rangeRound([0, height], .8, 0);
   svg = d3.select("body").append("svg")
               .attr("width", width+margin.left+margin.right)
               .attr("height", height+margin.top+margin.bottom);
-  console.log(d3.select('input[name=encoder]:checked'));
-  var encoder = d3.select('input[name=encoder]:checked').node().value;
-
-  max = d3.max(data, function(d){
-                  return d[encoder];
-              })
-  min = 0;
-  xScale.domain([min, max]);
-  yScale.domain(data.map(function(d){
-    return d.name;
-  }));
-
-}
+};
 
 function initBarchart(data){
   initBarchartVars(data);
-  yAxis = d3.svg.axis()
-        .scale(yScale)
-        .orient("left")
-        .tickSize(0,0);
+  var encoder = d3.select('input[name=encoder]:checked').node().value;
+  max = d3.max(data, function(d){
+      return d[encoder];
+  });
+  min = 0;
+  xScale = d3.scaleLinear().domain([0, max])
+      .range([textW, width]);
+
+  // Add normal length
+  yScale = d3.scaleBand().range([0, data.length*barH]);
+  svg.attr('height', yScale.range()[1]+25+'px');
+  yAxis = d3.axisLeft()
+    .scale(yScale);
+
   svg.append("g")
     .call(yAxis);
   var bar = svg.selectAll('g')
-           .data(data)
-       .enter().append('g')
-           .attr('transform', function(d, i) { return "translate(0," + i * bar_height + ")"; });
+   .data(data)
+   .enter()
+   .append('g')
+   .attr('transform', function(d, i) {
+      return "translate(0," + i * barH + ")";
+    });
 
    bar.append('rect').transition().duration(1000)
-       .attr('width', function(d) { return xScale(d.population); })
-       .attr('height', bar_height - 1)
-       .attr('x', 150)
-       .attr('fill', function(d) { return getRandomColor(d.population, max); });
+       .attr('width', function(d) {
+         return xScale(d[encoder]); })
+       .attr('height',  barH - 1)
+       .attr('x', 150);
+       // .attr('fill', function(d){
+       //   return colors(d[encoder], max);
+       // });
 
    bar.append('text')
        .text(function(d){
-           return d.name;
+           return d['Name'];
        })
        .attr('y', function(d, i){
            return i + 9;
        })
        .attr('class', 'lable');
-}
 
+    var t = d3.selectAll('rect');
+    t.attr("fill", function(d, i) {
+      return colors(i);
+    });
+}
 
 function updateBarchart(data){
   initBarchartVars(data);
