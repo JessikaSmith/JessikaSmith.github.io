@@ -4,6 +4,8 @@ Email: mariyaxod@yandex.ru
 
 ## List of homeworks:
 * [hw1](http://jessikasmith.github.io/hw1/)
+* [hw2 Table](http://jessikasmith.github.io/hw2/table.html)
+* [hw2 Barchart](http://jessikasmith.github.io/hw2/barchart.html)
 
 ## TODO
 ### Lab2:
