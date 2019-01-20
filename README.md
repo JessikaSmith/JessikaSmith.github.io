@@ -17,7 +17,10 @@ Email: mariyaxod@yandex.ru
 - [x] Add "Encode bars by", "Sort by" and change "None" in "Aggregate by" to "Country"
 - [ ] Implement SVG with the same functionality as for table;
 - [x] Fix issue with names when sorting and filtering;
-- [ ] Fix issue with filtering and aggregation;
+- [ ] Fix issue with first entry vanishing;
+- [ ] Add styles;
+- [ ] Merge table and barchart to one file;
+- [x] Change urls;
 
 
 ### Lab3:

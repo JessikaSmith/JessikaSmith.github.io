@@ -108,13 +108,13 @@ function aggregator(data) {
 }
 
 function initBarchartVars(data){
-  margin = {top: 50, bottom: 10, left:300, right: 40};
+  margin = {top: 50, bottom: 10, left: 40, right: 40};
   textW = 200;
-  barH = 20;
+  barH = 30;
   width = 900 - margin.left - margin.right;
   height = barH*data.length - margin.top - margin.bottom;
   xScale = d3.scaleLinear().range([0, width]);
-  yScale = d3.scaleBand().rangeRound([0, height], .8, 0);
+  yScale = d3.scaleBand().range([0, barH*data.length]);
   encoder = d3.select('input[name=encoder]:checked').node().value;
   max = d3.max(data, function(d){
       return d[encoder];
@@ -124,14 +124,14 @@ function initBarchartVars(data){
       .range([textW, width]);
 
   // Add normal length
-  yScale = d3.scaleBand().range([0, data.length*barH]);
+  yScale = d3.scaleBand().rangeRound([0, height*barH], .8, 0);
   yAxis = d3.axisLeft()
     .scale(yScale);
-    aggVar = d3.select('input[name="aggregate"]:checked').node().value;
-    sortVar = d3.select('input[name=sort]:checked').node().value;
-    if (aggVar === "continent" && sortVar === "Name"){
-        sortVar = "Continent"
-    };
+  aggVar = d3.select('input[name="aggregate"]:checked').node().value;
+  sortVar = d3.select('input[name=sort]:checked').node().value;
+  if (aggVar === "continent" && sortVar === "Name"){
+      sortVar = "Continent"
+  };
 
 };
 
@@ -139,7 +139,7 @@ function initBarchart(data){
   initBarchartVars(data);
 
   var svg = d3.select("body").append("svg")
-              .attr("width", width+margin.left+margin.right)
+              .attr("width", width + margin.left + margin.right)
               .attr("height", yScale.range()[1]+25+'px');
 
   svg.append("g")
@@ -160,7 +160,7 @@ function initBarchart(data){
    bar.append('rect').transition().duration(1000)
        .attr('width', function(d) {
          return xScale(d[encoder]); })
-       .attr('height',  barH - 1)
+       .attr('height',  barH - 2)
        .attr('x', 150);
        // .attr('fill', function(d){
        //   return colors(d[encoder], max);
@@ -189,7 +189,7 @@ function updateBarchart(data){
   var svg = d3.select("svg");
 
   svg.attr("width", width+margin.left+margin.right)
-      .attr("height", yScale.range()[1]+25+'px');
+      .attr("height", yScale.range()[1] + 25 + 'px');
 
   svg.append("g")
     .call(yAxis);
@@ -206,10 +206,13 @@ function updateBarchart(data){
       return "translate(0," + i * barH + ")";
     });
 
-   bar.append('rect').transition().duration(1000)
+    console.log(bar);
+
+   bar.append('rect').transition().duration(900)
        .attr('width', function(d) {
+         console.log(d[encoder])
          return xScale(d[encoder]); })
-       .attr('height',  barH - 1)
+       .attr('height',  barH - 2)
        .attr('x', 150);
        // .attr('fill', function(d){
        //   return colors(d[encoder], max);
@@ -231,7 +234,7 @@ function updateBarchart(data){
 
 };
 
-var url = "http://localhost:8000/json_files/data.json"
+var url = "json_files/countries_1995_2012.json"
 d3.json(url, function(error, data){
   barchartData = prepare_columns(data);
   yearsData = getYear(barchartData);
