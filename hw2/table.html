@@ -17,30 +17,25 @@
       <label class="year_label">2012</label>
     </div>
     <div id="checkbox">
-      <form method="post" action="" class="check_panel"></form>
-      <!-- <lable class="checkboxes">
-        <input type='checkbox', name='america' value="Americas" onchange="sort_america">
-        <span>Americas</span>
-        <input type='checkbox', name='africa' value="Africa" on>
-        <span>Africa</span>
-        <input type='checkbox', name='asia' value="Asia">
-        <span>Asia</span>
-        <input type='checkbox', name='europe' value="Europe">
-        <span>Europe</span>
-        <input type='checkbox', name='oceania' value="Oceania">
-        <span>Oceania<span>
-      </lable> -->
+      <input type='checkbox', name='america' value="Americas">
+      <span>Americas</span>
+      <input type='checkbox', name='africa' value="Africa" onchange="filterRows()">
+      <span>Africa</span>
+      <input type='checkbox', name='asia' value="Asia" onchange="filterRows()">
+      <span>Asia</span>
+      <input type='checkbox', name='europe' value="Europe" onchange="filterRows()">
+      <span>Europe</span>
+      <input type='checkbox', name='oceania' value="Oceania" onchange="filterRows()">
+      <span>Oceania<span>
     </div>
     <div class="radio">
-      <input type='radio' value="agg">
-      <span>With content</span>
-      <input type="radio" value="noagg">
+      <input type="radio" name="aggregate" value="noagg" checked>
       <span>None</span>
+      <input type='radio' name="aggregate" value="agg">
+      <span>By content</span>
     </div>
 
   </div>
-
-
   <script type="text/javascript" src="./js/table_script.js"></script>
 </body>
 </html>

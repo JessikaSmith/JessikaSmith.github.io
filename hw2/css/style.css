@@ -13,14 +13,14 @@ th{
 }
 
 th, td {
-  padding: 0 1em 0.5ex 0;
+  padding: 0.2 0.2em 0.5ex 0;
 }
 
 th.center, td.center {
   text-align: center;
 }
 
-th.num, td.num {
+th.right, td.right {
   text-align: right;
 }
 
@@ -34,7 +34,7 @@ table{
     display: inline-block;
 }
 
-tr:hover td { background-color: #edf8b1; }
+tr:hover td { background-color: #FFA500; }
 
 table, th, td { border: 1px solid lightgray; }
 
@@ -45,3 +45,5 @@ table {
 table th:not((.asc):not(.desc):not(.sorttable_nosort):after {
     content: " \25B4\25BE"
 }
+
+li { cursor: pointer; }

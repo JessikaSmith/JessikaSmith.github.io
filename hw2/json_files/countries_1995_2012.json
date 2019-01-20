@@ -8,6 +8,7 @@
                 "gdp": 12650000000.0,
                 "life_expectancy": 42.0514634146341,
                 "top_partners": 
+				[
                     {
                         "total_export": 2036096161.9550002,
                         "country_id": 223
