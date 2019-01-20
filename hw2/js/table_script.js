@@ -1,12 +1,13 @@
+let tableData;
 
 // column definitions
 const columns = [
     { head: 'Name', cl: 'center', html: f('Name') },
     { head: 'Continent', cl: 'center', html: f('Continent') },
-    { head: 'GDP', cl: 'num', html: f('GDP', d3.format(',.2s')) },
-    { head: 'Life Expectancy', cl: 'num', html: f('Life Expectancy', d3.format('.1f')) },
-    { head: 'Population', cl: 'num', html: f('Population', d3.format(',.0f')) },
-    { head: 'Year', cl: 'num', html: f('Year', d3.format('.0f')) }
+    { head: 'GDP', cl: 'right', html: f('GDP', d3.format(',.2s')) },
+    { head: 'Life Expectancy', cl: 'right', html: f('Life Expectancy', d3.format('.1f')) },
+    { head: 'Population', cl: 'right', html: f('Population', d3.format(',.0f')) },
+    { head: 'Year', cl: 'right', html: f('Year', d3.format('.0f')) }
 ];
 
 // get information from nested json
@@ -70,20 +71,21 @@ function f() {
 
 function getYear(data, year){
   var y = d3.select('input[type=range]').node().valueAsNumber;
+  console.log(data);
+  console.log(year);
   if (data === undefined) {
-        data = tableData;
-    }
-    if (year === undefined) {
-        year = y;
-    }
+    data = tableData;
+  }
+  if (year === undefined) {
+    year = y;
+  }
   return data.map(function (t) {
-    console.log(t.Years[year - 1995]);
     return {
         'Name': t.Name,
         'Continent': t.Continent,
-        'GDP': t.Years[year - 1995].gdp,
-        'Life Expectancy': t.Years[year - 1995]['Life Expectancy'],
-        'Population': t.Years[year - 1995].Population,
+        'GDP': t.Years[year-1995]['GDP'],
+        'Life Expectancy': t.Years[year-1995]['Life Expectancy'],
+        'Population': t.Years[year-1995]['Population'],
         'Year': year
     }
   });
@@ -144,39 +146,43 @@ function table_show(data){
         .append("tr")
         .attr("class", "row");
 
-// according to https://www.vis4.net/blog/2015/04/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
+      // according to https://www.vis4.net/blog/2015/04/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
     var cells = tbody.selectAll('tr.row')
         .selectAll('td')
-        .data(function(row, i) {
-            return columns.map(function(c){
-              var cell = {};
-              d3.keys(c).forEach(function(k){
-                cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
-              });
-              return cell;
-            });
-          })
+        .data(fillFunc)
         .enter()
         .append('td')
         .html(f('html'))
         .attr('class', f('cl'));
-  };
+
+  }
+
+const fillFunc = function (row, i){
+      return columns.map(function(c){
+        var cell = {};
+        d3.keys(c).forEach(function(k){
+          cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+        });
+        return cell;
+      });
+};
 
 // Filtering tools
 
 function filterRows(data){
   if (data === undefined) {
-        data = getYear(tableData, 200);
+        data = getYear(tableData, 2000);
     }
   cb = [];
   d3.selectAll("input[type=checkbox]").each(function(d){
-    if (d3.select(this).property("checked")){
-      cb.push(d3.select(this).property("value"));
+    this_selected = d3.select(this)
+    if (this_selected.property("checked")){
+      cb.push(this_selected.property("value"));
     }
   });
   if (cb.length > 0){
     filteredData = data.filter(function(d, i){
-      return filteredData.includes(d.Continent);
+      return cb.includes(d.Continent);
     })
   }
   else {
@@ -188,6 +194,9 @@ function filterRows(data){
 // aggregation tools
 
 function aggregator(data) {
+  if (data === undefined) {
+    data = getYear(tableData, 2000);
+  }
   var agg = d3.select('input[name="aggregate"]:checked').node().value;
   var n = 0;
   if (agg == "agg"){
@@ -227,20 +236,42 @@ function aggregator(data) {
 }
 
 // Looking at the resulting table
-var url = "http://localhost:8000/json_files/data.json"
+var url = "http://localhost:8000/json_files/data.json";
 d3.json(url, function(error, data){
   tableData = prepare_columns(data);
   yearsData = getYear(tableData);
   table_show(yearsData);
 });
 
-function update (){
-  filterRows()
-}
+function update(data){
+  tbody = d3.select('tbody')
+  rows = tbody.selectAll("tr.row")
+    .data(data);
+  rows.exit().remove();
+  rows = rows
+    .enter()
+    .append("tr")
+    .attr("class", "row")
+    .merge(rows);
+  cells = rows.selectAll("td")
+    .data(fillFunc);
+  cells.exit()
+    .remove();
+  cells = cells.enter()
+    .append("td");
+  tbody.selectAll("td")
+    .html(f("html"))
+    .attr("class", f("cl"));
+};
 
 d3.selectAll("input[type=range]").on("change", function(){
-  update(filterRows(aggregator(getYear())));
-
+  data = update(filterRows(aggregator(getYear())));
 });
 
-// d3.json(url, prepare_columns)
+d3.selectAll('input[name="aggregate"]').on("change", function(){
+    update(filterRows(aggregator()));
+});
+
+d3.selectAll("input[type=checkbox]").on("change", function(){
+  update(filterRows(aggregator()));
+});

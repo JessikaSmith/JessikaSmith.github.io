@@ -20,7 +20,7 @@ th.center, td.center {
   text-align: center;
 }
 
-th.num, td.num {
+th.right, td.right {
   text-align: right;
 }
 
@@ -45,3 +45,5 @@ table {
 table th:not((.asc):not(.desc):not(.sorttable_nosort):after {
     content: " \25B4\25BE"
 }
+
+li { cursor: pointer; }
