@@ -47,3 +47,8 @@ table th:not((.asc):not(.desc):not(.sorttable_nosort):after {
 }
 
 li { cursor: pointer; }
+
+rect{
+  fill:teal;
+  fill-opacity:.8
+}
