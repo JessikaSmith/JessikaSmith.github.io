@@ -16,6 +16,8 @@ Email: mariyaxod@yandex.ru
 - [ ] Extract max and min year from data;
 - [x] Add "Encode bars by", "Sort by" and change "None" in "Aggregate by" to "Country"
 - [ ] Implement SVG with the same functionality as for table;
+- [x] Fix issue with names when sorting and filtering;
+- [ ] Fix issue with filtering and aggregation;
 
 
 ### Lab3:

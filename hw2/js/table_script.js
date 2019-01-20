@@ -233,18 +233,13 @@ function aggregator(data) {
   }
 }
 
-
-
 // Looking at the resulting table
 var url = "http://localhost:8000/json_files/data.json";
 d3.json(url, function(error, data){
   tableData = prepare_columns(data);
   yearsData = getYear(tableData);
   table_show(yearsData);
-
 // barchart
-
-
 });
 
 function update(data){

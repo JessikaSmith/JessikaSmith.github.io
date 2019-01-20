@@ -14,43 +14,43 @@
       <span>Time update:</span>
       <label class="year_label">1995</label>
       <input type='range' min='1995' max='2012' value='2000'
-      step='1' class='slider' id='user_range'>
+          step='1' class='slider' onchange="change()">
       <label class="year_label">2012</label>
     </div>
     <div id="encoding">
       <span>Encode bars by:</span>
-      <input type='radio', name='encoder' value="Population" checked>
+      <input type='radio', name='encoder' value="Population" onchange="change()">
       <span>Population</span>
-      <input type='radio', name='encoder' value="GDP">
+      <input type='radio', name='encoder' value="GDP"  onchange="change()" checked>
       <span>GDP</span>
     </div>
     <div id="checkbox">
       <span>Filter by:</span>
-      <input type='checkbox', name='america' value="Americas" onchange="filterRows()">
+      <input type='checkbox', name='america' value="Americas" onchange="change()">
       <span>Americas</span>
-      <input type='checkbox', name='africa' value="Africa" onchange="filterRows()">
+      <input type='checkbox', name='africa' value="Africa" onchange="change()">
       <span>Africa</span>
-      <input type='checkbox', name='asia' value="Asia" onchange="filterRows()">
+      <input type='checkbox', name='asia' value="Asia" onchange="change()">
       <span>Asia</span>
-      <input type='checkbox', name='europe' value="Europe" onchange="filterRows()">
+      <input type='checkbox', name='europe' value="Europe" onchange="change()">
       <span>Europe</span>
-      <input type='checkbox', name='oceania' value="Oceania" onchange="filterRows()">
+      <input type='checkbox', name='oceania' value="Oceania" onchange="change()">
       <span>Oceania<span>
     </div>
     <div class="radio">
       <span>Aggregate by:</span>
-      <input type="radio" name="aggregate" value="noagg" checked>
+      <input type="radio" name="aggregate" value="Continent" onchange="change()">
       <span>Continent</span>
-      <input type='radio' name="aggregate" value="agg">
+      <input type="radio" name="aggregate" value="Name"  onchange="change()" checked>
       <span>Country</span>
     </div>
     <div class="radio">
       <span>Sort by:</span>
-      <input type="radio" name="sort" value="name" checked>
+      <input type="radio" name="sort" value="Name" onchange="change()" checked>
       <span>Name</span>
-      <input type='radio' name="sort" value="population">
+      <input type='radio' name="sort" value="Population" onchange="change()">
       <span>Population</span>
-      <input type='radio' name="sort" value="gdp">
+      <input type='radio' name="sort" value="GDP" onchange="change()">
       <span>GDP</span>
     </div>
   </div>
