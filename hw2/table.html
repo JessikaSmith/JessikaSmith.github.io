@@ -17,7 +17,8 @@
       <label class="year_label">2012</label>
     </div>
     <div id="checkbox">
-      <input type='checkbox', name='america' value="Americas">
+      <span>Filter by:</span>
+      <input type='checkbox', name='america' value="Americas" onchange="filterRows()">
       <span>Americas</span>
       <input type='checkbox', name='africa' value="Africa" onchange="filterRows()">
       <span>Africa</span>
@@ -29,12 +30,12 @@
       <span>Oceania<span>
     </div>
     <div class="radio">
+      <span>Aggregate by:</span>
       <input type="radio" name="aggregate" value="noagg" checked>
       <span>None</span>
       <input type='radio' name="aggregate" value="agg">
-      <span>By content</span>
+      <span>Continent</span>
     </div>
-
   </div>
   <script type="text/javascript" src="./js/table_script.js"></script>
 </body>

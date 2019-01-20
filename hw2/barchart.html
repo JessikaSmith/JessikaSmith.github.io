@@ -7,5 +7,51 @@
     <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
-  
+  <script type="text/javascript" src="./js/barchart_script.js"></script>
+  <h1>World Countries Ranking</h1>
+  <div class="control">
+    <div class="slidecontainer">
+      <span>Time update:</span>
+      <label class="year_label">1995</label>
+      <input type='range' min='1995' max='2012' value='2000'
+      step='1' class='slider' id='user_range'>
+      <label class="year_label">2012</label>
+    </div>
+    <div id="encoding">
+      <span>Encode bars by:</span>
+      <input type='radio', name='encoder' value="Population" checked>
+      <span>Population</span>
+      <input type='radio', name='encoder' value="GDP">
+      <span>GDP</span>
+    </div>
+    <div id="checkbox">
+      <span>Filter by:</span>
+      <input type='checkbox', name='america' value="Americas" onchange="filterRows()">
+      <span>Americas</span>
+      <input type='checkbox', name='africa' value="Africa" onchange="filterRows()">
+      <span>Africa</span>
+      <input type='checkbox', name='asia' value="Asia" onchange="filterRows()">
+      <span>Asia</span>
+      <input type='checkbox', name='europe' value="Europe" onchange="filterRows()">
+      <span>Europe</span>
+      <input type='checkbox', name='oceania' value="Oceania" onchange="filterRows()">
+      <span>Oceania<span>
+    </div>
+    <div class="radio">
+      <span>Aggregate by:</span>
+      <input type="radio" name="aggregate" value="noagg" checked>
+      <span>Continent</span>
+      <input type='radio' name="aggregate" value="agg">
+      <span>Country</span>
+    </div>
+    <div class="radio">
+      <span>Sort by:</span>
+      <input type="radio" name="sort" value="name" checked>
+      <span>Name</span>
+      <input type='radio' name="sort" value="population">
+      <span>Population</span>
+      <input type='radio' name="sort" value="gdp">
+      <span>GDP</span>
+    </div>
+  </div>
 </body>

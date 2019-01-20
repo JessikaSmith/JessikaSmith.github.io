@@ -168,7 +168,6 @@ const fillFunc = function (row, i){
 };
 
 // Filtering tools
-
 function filterRows(data){
   if (data === undefined) {
         data = getYear(tableData, 2000);
@@ -192,7 +191,6 @@ function filterRows(data){
 }
 
 // aggregation tools
-
 function aggregator(data) {
   if (data === undefined) {
     data = getYear(tableData, 2000);
@@ -235,12 +233,18 @@ function aggregator(data) {
   }
 }
 
+
+
 // Looking at the resulting table
 var url = "http://localhost:8000/json_files/data.json";
 d3.json(url, function(error, data){
   tableData = prepare_columns(data);
   yearsData = getYear(tableData);
   table_show(yearsData);
+
+// barchart
+
+
 });
 
 function update(data){
@@ -269,9 +273,9 @@ d3.selectAll("input[type=range]").on("change", function(){
 });
 
 d3.selectAll('input[name="aggregate"]').on("change", function(){
-    update(filterRows(aggregator()));
+    update(filterRows(aggregator(getYear())));
 });
 
 d3.selectAll("input[type=checkbox]").on("change", function(){
-  update(filterRows(aggregator()));
+  update(filterRows(aggregator(getYear())));
 });
