@@ -4,6 +4,14 @@ body{
   padding: 20px;
 }
 
+#selected_up th::before{
+  content: '\25B4';
+}
+
+#selected_down td::before{
+  content: '\25BE';
+}
+
 #header tr {background-color: #779FB6;}
 
 tr:nth-of-type(odd) {
