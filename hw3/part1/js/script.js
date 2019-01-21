@@ -32,8 +32,8 @@ d3.csv("data/fifa-world-cup.csv", function (error, allData) {
     // Define this as a global variable
     window.barChart = new BarChart(worldMap, infoPanel, allData);
     window.infoPanel = infoPanel;
-
-
+    window.worldMap = worldMap;
+    
     // Draw the Bar chart for the first time
     barChart.updateBarChart('attendance');
 });

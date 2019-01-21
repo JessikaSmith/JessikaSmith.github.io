@@ -109,7 +109,6 @@ class BarChart {
           .attr('x', function(d){ return (margin.left + xScale(d.year));})
           .attr('y', function(d){ return yScale(d[selectedDimension]); })
           .style('fill', function(d){ return color(d[selectedDimension])});
-
     }
 
     /**
@@ -123,6 +122,7 @@ class BarChart {
         //Changed the selected data when a user selects a different
         // menu item from the drop down.
         infoPanel.updateInfo(d);
+        worldMap.updateMap(d);
         console.log(d[selectedDimension])
         d3.select('.selected')
           // classed for css add/removal

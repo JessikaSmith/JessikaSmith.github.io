@@ -27,4 +27,5 @@ Email: mariyaxod@yandex.ru
 
 ### Lab3:
 - [x] Fix problems with selected bar size changing;
-- [ ] Change behavior in selection on change;
+- [ ] Change behavior in selection on change (clear info panel);
+- [ ] Fix vanishing circles;
