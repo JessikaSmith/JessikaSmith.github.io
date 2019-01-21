@@ -25,7 +25,7 @@ class Map {
         color.classed('host', false);
         color.classed('team', false);
         color.classed('countries', true);
-        d3.selectAll('circle').remove();
+        d3.selectAll('#mapguys').remove();
 
     }
 
@@ -51,45 +51,39 @@ class Map {
         // We strongly suggest using CSS classes to style the selected countries.
 
         // Select the host country and change it's color accordingly.
-        var host = '#' + worldcupData.host_country_code;
-        var teams = worldcupData.teams_iso;
-        var winner = worldcupData.winner;
 
-        var iso = worldcupData.TEAM_LIST.split(',');
+        var teams = worldcupData.teams_iso;
+        var teamsList = worldcupData.TEAM_LIST.split(',');
         var name = worldcupData.TEAM_NAMES.split(',');
+        var winner = worldcupData.winner;
         var i = name.indexOf(winner);
-        var win = '#' + iso[i];
+        var win = '#' + teamsList[i];
+
+        var host = '#' + worldcupData.host_country_code;
         var color = d3.select('#map').select(host)
             .attr('class', 'countries host');
-        for (i in iso){
-            var col = d3.select(('#' + iso[i]))
+        for (i in teamsList){
+            var col = d3.select(('#' + teamsList[i]))
                 .classed('team', true);
         }
 
-        var cx = (worldcupData.WIN_LON);
-        var cy = (worldcupData.WIN_LAT);
-
         // Add a marker for gold/silver medalists
         d3.select('#map').selectAll('circle')
-            .data([cx, cy]).enter().append("circle")
-            .attr("r", '5px')
-            .attr('class', 'gold')
-            .attr("transform", function(d) {
-                return "translate(" + projection([
-                    cx,
-                    cy
-                ]) + ")";
-            });
-        cx = worldcupData.RUP_LON;
-        cy = worldcupData.RUP_LAT;
+          .data([worldcupData.WIN_LON, worldcupData.WIN_LAT]).enter().append("circle")
+          .attr("r", '5px')
+          .attr('class', 'gold')
+          .attr('id', 'mapguys')
+          .attr("transform", function(d) {
+            return "translate(" +
+            projection([worldcupData.WIN_LON, worldcupData.WIN_LAT]) + ")";
+          });
         d3.select('#map').append("circle")
-            .attr("r", '5px')
-            .attr('class', 'silver')
-            .attr("transform", function(d) {
-                return "translate(" + projection([
-                    cx,
-                    cy
-                ]) + ")";
+          .attr("r", '5px')
+          .attr('class', 'silver')
+          .attr('id', 'mapguys')
+          .attr("transform", function(d) {
+            return "translate(" +
+            projection([worldcupData.RUP_LON, worldcupData.RUP_LAT]) + ")";
             });
     }
 
@@ -107,21 +101,16 @@ class Map {
         // Draw the background (country outlines; hint: use #map)
         // Make sure and add gridlines to the map
 
-        // Hint: assign an id to each country path to make it easier to select afterwards
-        // we suggest you use the variable in the data element's .id field to set the id
-
-        // Make sure and give your paths the appropriate class (see the .css selectors at
-        // the top of the provided html file)
-
         console.log(world)
         var geoPath = d3.geoPath()
             .projection(projection);
         var g = d3.select('#map')
-            .attr('width', 900)
-            .attr('height', 600);
+            .attr('width', 1000)
+            .attr('height', 500);
 
         // Hint: assign an id to each country path to make it easier to select afterwards
         // we suggest you use the variable in the data element's .id field to set the id
+
         g.selectAll('path')
             .data(topojson.feature(world, world.objects.countries).features)
             .enter()
@@ -130,6 +119,7 @@ class Map {
             .attr('id', function(d){
                 return d.id;})
             .attr('d', geoPath);
+
         g.append('path')
             .datum(d3.geoGraticule().stepMinor([10, 10]))
             .attr('id', 'grid')

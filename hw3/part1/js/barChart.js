@@ -135,7 +135,7 @@ class BarChart {
         d3.select(this)
           .classed('bar', false)
           .classed('selected', true)
-          .style('fill','#06B900');
+          .style('fill','#d20a11');
 
     }
 }

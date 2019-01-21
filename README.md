@@ -5,7 +5,8 @@ Email: mariyaxod@yandex.ru
 ## List of homeworks:
 * [hw1](http://jessikasmith.github.io/hw1/)
 * [hw2 Table](http://jessikasmith.github.io/hw2/table.html)
-* [hw2 Barchart](http://jessikasmith.github.io/hw2/barchart.html)
+* [hw2 Barchart](http://jessikasmith.github.io/hw2/barchart.html)  
+* [hw3 Part 1](http://jessikasmith.github.io/hw3/part1/hw3.html)
 
 ## TODO
 ### Lab2:
@@ -28,4 +29,4 @@ Email: mariyaxod@yandex.ru
 ### Lab3:
 - [x] Fix problems with selected bar size changing;
 - [ ] Change behavior in selection on change (clear info panel);
-- [ ] Fix vanishing circles;
+- [x] Fix vanishing circles from the legend;
