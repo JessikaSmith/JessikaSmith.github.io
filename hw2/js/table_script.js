@@ -91,6 +91,7 @@ function getYear(data, year){
   });
 }
 
+
 function table_show(data){
 
   var table = d3.select("body").append("table")
@@ -155,7 +156,6 @@ function table_show(data){
         .append('td')
         .html(f('html'))
         .attr('class', f('cl'));
-
   }
 
 const fillFunc = function (row, i){
@@ -247,6 +247,8 @@ function update(data){
   tbody = d3.select('tbody')
   rows = tbody.selectAll("tr.row")
     .data(data);
+    //TODO: Add icon to a particular property
+  rows.selectAll('')
   rows.exit().remove();
   rows = rows
     .enter()
