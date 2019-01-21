@@ -137,7 +137,6 @@ function initBarchartVars(data){
   if (aggVar === "continent" && sortVar === "Name"){
       sortVar = "Continent"
   };
-
 };
 
 function initBarchart(data){
@@ -167,7 +166,7 @@ function initBarchart(data){
       return "translate(0," + i * barH + ")";
     });
 
-   bar.append('rect').transition().duration(1000)
+   bar.append('rect').transition().duration(800)
        .attr('width', function(d) {
          return xScale(d[encoder]); })
        .attr('height',  barH - 2)
@@ -192,6 +191,7 @@ function initBarchart(data){
     t.attr("fill", function(d, i) {
       return colors(i);
     });
+     d3.selectAll("path.domain").remove();
 }
 
 function updateBarchart(data){
@@ -249,13 +249,14 @@ function updateBarchart(data){
        .attr('class', 'lable');
 
      bar.selectAll("text")
-       .attr("dx", "30px");
+       .attr("dx", "15px")
+       .attr("text-align","right");
 
     var t = d3.selectAll('rect');
     t.attr("fill", function(d, i) {
       return colors(i);
     });
-
+     d3.selectAll("path.domain").remove();
 };
 
 var url = "json_files/countries_1995_2012.json"
