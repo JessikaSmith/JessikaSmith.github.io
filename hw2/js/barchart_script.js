@@ -111,12 +111,12 @@ function initBarchartVars(data){
   margin = {top: 50, bottom: 5, left: 50, right: 10};
   // Fix this
   textW = 10;
-  barH = 15;
+  barH = 20;
   width = 900 - margin.left - margin.right;
   height = barH*data.length - margin.top - margin.bottom;
   console.log(height);
   xScale = d3.scaleLinear().range([0, width]);
-  yScale = d3.scaleBand().range([1, barH*data.length]);
+  yScale = d3.scaleBand().range([0, barH*data.length]);
   encoder = d3.select('input[name=encoder]:checked').node().value;
   max = d3.max(data, function(d){
       return d[encoder];
@@ -126,8 +126,8 @@ function initBarchartVars(data){
       .range([textW, width]);
 
   // Add normal length
-  yScale = d3.scaleBand()
-    .rangeRound([0, height*data.length]).padding(.1);
+  // yScale = d3.scaleBand()
+  //   .rangeRound([0, height*data.length]).padding(.1);
   yAxis = d3.axisLeft()
     .scale(yScale);
 
@@ -171,7 +171,7 @@ function initBarchart(data){
        .attr('width', function(d) {
          return xScale(d[encoder]); })
        .attr('height',  barH - 2)
-       .attr('x', 250);
+       .attr('x', 300);
        // .attr('fill', function(d){
        //   return colors(d[encoder], max);
        // });
