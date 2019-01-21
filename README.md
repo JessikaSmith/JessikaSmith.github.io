@@ -13,16 +13,14 @@ Email: mariyaxod@yandex.ru
 - [x] Add hover;
 - [x] Fix sorting (problem with global sorting const);
 - [x] Fix ambiguity in sorting;
-- [ ] Add sorting arrows;
+- [x] Add hover sorting arrows;
 - [x] Fix filtering;
 - [x] Add aggregation;
-- [ ] Extract max and min year from data;
 - [x] Add "Encode bars by", "Sort by" and change "None" in "Aggregate by" to "Country"
-- [ ] Implement SVG with the same functionality as for table;
+- [x] Implement SVG with the same functionality as for table;
 - [x] Fix issue with names when sorting and filtering;
 - [ ] Fix issue with first entry vanishing;
 - [ ] Add styles;
-- [ ] Merge table and barchart to one file;
 - [x] Change urls;
 - [ ] Add animation;
 - [x] Fix sorting for numerical columns;

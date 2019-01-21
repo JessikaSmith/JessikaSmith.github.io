@@ -4,6 +4,14 @@ body{
   padding: 20px;
 }
 
+thead td , th{
+    cursor: s-resize;
+}
+
+g .label{
+  text-align: right;
+}
+
 #selected_up th::before{
   content: '\25B4';
 }
