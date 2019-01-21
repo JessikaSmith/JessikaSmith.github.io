@@ -96,7 +96,8 @@ function table_show(data){
   var table = d3.select("body").append("table")
               .attr("class", "newTable");
   var thead = table.append("thead")
-              .attr("class", "thead");
+              .attr("class", "thead")
+              .attr("id", "header");
   var tbody = table.append("tbody");
 
   table.append("caption")

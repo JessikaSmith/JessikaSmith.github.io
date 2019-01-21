@@ -18,9 +18,9 @@ function prepare_columns(columns){
           'Year': y.year
         }
       })
-      };
-    });
-  };
+    };
+  });
+};
 
   function filterRows(data){
     console.log('Filter was called!');
@@ -108,8 +108,9 @@ function aggregator(data) {
 }
 
 function initBarchartVars(data){
-  margin = {top: 50, bottom: 10, left: 40, right: 40};
-  textW = 200;
+  margin = {top: 50, bottom: 50, left: 50, right: 10};
+  // Fix this
+  textW = 10;
   barH = 30;
   width = 900 - margin.left - margin.right;
   height = barH*data.length - margin.top - margin.bottom;
@@ -124,11 +125,14 @@ function initBarchartVars(data){
       .range([textW, width]);
 
   // Add normal length
-  yScale = d3.scaleBand().rangeRound([0, height*barH], .8, 0);
+  yScale = d3.scaleBand()
+    .rangeRound([0, height*barH]).padding(.1);
   yAxis = d3.axisLeft()
     .scale(yScale);
+
   aggVar = d3.select('input[name="aggregate"]:checked').node().value;
   sortVar = d3.select('input[name=sort]:checked').node().value;
+
   if (aggVar === "continent" && sortVar === "Name"){
       sortVar = "Continent"
   };
@@ -138,6 +142,9 @@ function initBarchartVars(data){
 function initBarchart(data){
   initBarchartVars(data);
 
+  var yW = yScale.bandwidth();
+  console.log(yW);
+
   var svg = d3.select("body").append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", yScale.range()[1]+25+'px');
@@ -145,9 +152,11 @@ function initBarchart(data){
   svg.append("g")
     .call(yAxis);
 
+
   data.sort(function(x, y){
      return d3.ascending(x[sortVar], y[sortVar]);
   })
+
 
   var bar = svg.selectAll('g')
    .data(data)
@@ -161,7 +170,7 @@ function initBarchart(data){
        .attr('width', function(d) {
          return xScale(d[encoder]); })
        .attr('height',  barH - 2)
-       .attr('x', 150);
+       .attr('x', 250);
        // .attr('fill', function(d){
        //   return colors(d[encoder], max);
        // });
@@ -174,6 +183,9 @@ function initBarchart(data){
            return i + 9;
        })
        .attr('class', 'lable');
+
+    bar.selectAll("text")
+      .attr("dx", "30px");
 
     var t = d3.selectAll('rect');
     t.attr("fill", function(d, i) {
@@ -194,9 +206,18 @@ function updateBarchart(data){
   svg.append("g")
     .call(yAxis);
 
-    data.sort(function(x, y){
-       return d3.ascending(x[sortVar], y[sortVar]);
-    })
+    if (sortVar == "Name"){
+      data.sort(function(x, y){
+         return d3.ascending(x[sortVar], y[sortVar]);
+      })
+    }
+    else{
+      data.sort(function(x, y){
+        return d3.descending(x[sortVar], y[sortVar]);
+      })
+    };
+
+    // Add animation by introducing prev bars
 
   var bar = svg.selectAll('g')
    .data(data)
@@ -206,14 +227,13 @@ function updateBarchart(data){
       return "translate(0," + i * barH + ")";
     });
 
-    console.log(bar);
 
    bar.append('rect').transition().duration(900)
        .attr('width', function(d) {
          console.log(d[encoder])
          return xScale(d[encoder]); })
        .attr('height',  barH - 2)
-       .attr('x', 150);
+       .attr('x', 250);
        // .attr('fill', function(d){
        //   return colors(d[encoder], max);
        // });
@@ -226,6 +246,9 @@ function updateBarchart(data){
            return i + 9;
        })
        .attr('class', 'lable');
+
+     bar.selectAll("text")
+       .attr("dx", "30px");
 
     var t = d3.selectAll('rect');
     t.attr("fill", function(d, i) {

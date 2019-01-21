@@ -4,6 +4,8 @@ body{
   padding: 20px;
 }
 
+#header tr {background-color: #779FB6;}
+
 tr:nth-of-type(odd) {
   background-color: #eee;
 }

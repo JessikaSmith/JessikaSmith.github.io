@@ -24,6 +24,8 @@ Email: mariyaxod@yandex.ru
 - [ ] Add styles;
 - [ ] Merge table and barchart to one file;
 - [x] Change urls;
+- [ ] Add animation;
+- [x] Fix sorting for numerical columns;
 
 
 ### Lab3:
