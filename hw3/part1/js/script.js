@@ -31,6 +31,8 @@ d3.csv("data/fifa-world-cup.csv", function (error, allData) {
 
     // Define this as a global variable
     window.barChart = new BarChart(worldMap, infoPanel, allData);
+    window.infoPanel = infoPanel;
+
 
     // Draw the Bar chart for the first time
     barChart.updateBarChart('attendance');
@@ -46,5 +48,7 @@ function chooseData() {
     // ******* TODO: PART I *******
     // Changed the selected data when a user selects a different
     // menu item from the drop down.
+    selectedDimension = d3.select('#dataset').property('value');
+    barChart.updateBarChart(selectedDimension);
 
 }

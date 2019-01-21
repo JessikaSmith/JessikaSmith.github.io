@@ -26,4 +26,5 @@ Email: mariyaxod@yandex.ru
 
 
 ### Lab3:
-- [ ]
+- [x] Fix problems with selected bar size changing;
+- [ ] Change behavior in selection on change;

@@ -234,7 +234,7 @@ function aggregator(data) {
 }
 
 // Looking at the resulting table
-var url = "json_files/countries_1995_2012.json";
+var url = "json_files/countries_1995_2012.json"
 d3.json(url, function(error, data){
   tableData = prepare_columns(data);
   yearsData = getYear(tableData);
