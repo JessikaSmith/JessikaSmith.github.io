@@ -9,6 +9,10 @@ Email: mariyaxod@yandex.ru
 * [hw3 Part 1](http://jessikasmith.github.io/hw3/part1/hw3.html)
 
 ## TODO
+
+### Lab 1:
+- [ ] Sort quotes;
+
 ### Lab2:
 - [x] Add hover;
 - [x] Fix sorting (problem with global sorting const);
