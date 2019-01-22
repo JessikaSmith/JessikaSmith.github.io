@@ -7,7 +7,18 @@
 </head>
 <body>
   <h1>First VIS101 Homework</h1>
+
+  <div id="dropdown">
+      <label>Select Author</label>
+      <select id="authors" onchange="getAuthorQuotes()">
+        <option selected value="all" > All </option>
+      </select>
+  </div>
+
+</br>
+
   <div class="boxed">
+
     <h2>Quote Of the Day:</h2>
      <blockquote id="quote" class="changeable_quote">
          All successful men and women are big dreamers. They imagine what their future could be, ideal in every respect, and then they work every day toward their distant vision, that goal or purpose.” – Brian Tracy
@@ -18,10 +29,6 @@
       <button type="button" onclick="newQuoteFunction()">
         Change Quote Of the Day!
       </button>
-    <div class="dropdown">
-      <button class="dropbtn" type="button" onClick="getAuthor()"> Select Author </button>
-      <div class="dropdown-content">
-      </div>
     </div>
   </div>
   <script src="./js/script.js"></script>
