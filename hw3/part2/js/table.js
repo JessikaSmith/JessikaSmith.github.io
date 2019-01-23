@@ -56,8 +56,7 @@ class Table {
     createTable() {
 
         // ******* TODO: PART II *******
-
-        var table = d3.select('#matchTable');
+        self = this;
 
         //Update Scale Domains
         var teamGoalsMax = this.teamData.reduce(function(i, j) {
@@ -115,7 +114,7 @@ class Table {
         var sortAscending = false;
         var headers = d3.select('thead').select('.head').selectAll('td');
         headers.on("click", function(){
-        this.collapseList(); //check
+        self.collapseList(); //check
 
                 var temp = data;
                 console.log(temp)
@@ -168,8 +167,6 @@ class Table {
                 data = temp;
                 self.updateTable();
         })
-
-
     }
 
 
@@ -202,9 +199,12 @@ class Table {
                     self.updateList(d, i);
                 }
             })
-            // .on('mouseover', function(d){
-            //   self.update_tree(d)
-            // })
+            .on('mouseover', function(d){
+              self.tree.updateTree(d);
+            })
+            .on('mouseout', function(d){
+              self.tree.clearTree(d);
+            })
         var tt = body.selectAll('tr')
           .data(data);
         tt.exit()
@@ -247,91 +247,91 @@ class Table {
               return d.vis == vis[i];
             })
           switch(vis[i]){
-              case '1':{
-                type.text(function(d){
-                  return d.type == 'aggregate' ? d.value : ('x' + d.value);
+            case '1':{
+              type.text(function(d){
+                return d.type == 'aggregate' ? d.value : ('x' + d.value);
+              })
+              .style('color', function(d){
+                return d.type == 'aggregate' ? 'black' : 'gray';
+              })
+              break;
+            }
+            case '2':{
+              type.text(function(d){
+                return d.value;
+              })
+              break;
+            }
+            case '3':{
+              type.select('svg').remove();
+              var bar = type.append('svg')
+                .attr('width', this.cell.width)
+                .attr('height', this.cell.height);
+              bar.append('rect')
+                .attr('height', this.cell.height)
+                .attr('width', function(d){
+                  var val = g(d.value)
+                  return val;
                 })
-                .style('color', function(d){
-                  return d.type == 'aggregate' ? 'black' : 'gray';
+                .attr('fill', function(d){
+                  return colorScale(d.value);
                 })
-                break;
-              }
-              case '2':{
-                type.text(function(d){
+              bar.append('g')
+                .append('text')
+                .text(function(d){
                   return d.value;
                 })
-                break;
-              }
-              case '3':{
-                type.select('svg').remove();
-                var bar = type.append('svg')
-                  .attr('width', this.cell.width)
-                  .attr('height', this.cell.height);
-                bar.append('rect')
-                  .attr('height', this.cell.height)
-                  .attr('width', function(d){
-                    var val = g(d.value)
-                    return val;
-                  })
-                  .attr('fill', function(d){
-                    return colorScale(d.value);
-                  })
-                bar.append('g')
-                  .append('text')
-                  .text(function(d){
-                    return d.value;
-                  })
-                  .attr('text-anchor', 'end')
-                  .attr('fill', 'white')
-                  .attr('dy', '14px')
-                  .attr('dx', '10px')
-              break;
-              }
-              case '4':{
-                type.select('svg').remove();
-                var goal = type.append('svg')
-                  .attr('width', this.cell.width + 100)
-                  .attr('height', this.cell.height)
-                goal.append('rect')
-                  .attr('x', function(d){
-                    console.log(d.value.made);
-                    return gs(Math.min(d.value.made, d.value.conc));
-                  })
-                  .attr('y', function(d){
-                    return d.type == 'aggregate' ? (5) : (8);
-                  })
-                  .attr('width', function(d){
-                    return Math.abs(gs(d.value.made) - gs(d.value.conc))
-                  })
-                  .attr('height', function(d){
-                    return d.type == 'aggregate' ? 10 : 3;
-                  })
-                  .attr('fill', function(d){
-                    return (d.value.made > d.value.conc) ? '#363377' : '#AA3939';
-                  })
-                goal.append('circle')
-                  .attr('cx', function(d){
-                    return gs(d.value.made);
-                  })
-                  .attr('cy', this.cell.height/2)
-                  .attr('r', '5')
-                  .attr('class', function(d){
-                    return d.type == 'aggregate' ? 'mg_l' : 'mg_r'
-                  })
-                goal.append('circle')
-                  .attr('cx', function(d){
-                    return gs(d.value.conc);
-                  })
-                  .attr('cy', this.cell.height/2)
-                  .attr('r', '5')
-                  .attr('class', function(d){
-                    if (d.value.made == d.value.conc)
-                      return d.type == 'aggregate' ? 'grey' : 'grey_f';
-                    return d.type == 'aggregate' ? 'cg_l' : 'cg_r';
-                  })
-                break;
-              }
+                .attr('text-anchor', 'end')
+                .attr('fill', 'white')
+                .attr('dy', '14px')
+                .attr('dx', '10px')
+            break;
             }
+            case '4':{
+              type.select('svg').remove();
+              var goal = type.append('svg')
+                .attr('width', this.cell.width + 100)
+                .attr('height', this.cell.height)
+              goal.append('rect')
+                .attr('x', function(d){
+                  console.log(d.value.made);
+                  return gs(Math.min(d.value.made, d.value.conc));
+                })
+                .attr('y', function(d){
+                  return d.type == 'aggregate' ? 5 : 8;
+                })
+                .attr('width', function(d){
+                  return Math.abs(gs(d.value.made) - gs(d.value.conc))
+                })
+                .attr('height', function(d){
+                  return d.type == 'aggregate' ? 10 : 3;
+                })
+                .attr('fill', function(d){
+                  return (d.value.made > d.value.conc) ? '#363377' : '#AA3939';
+                })
+              goal.append('circle')
+                .attr('cx', function(d){
+                  return gs(d.value.made);
+                })
+                .attr('cy', this.cell.height/2)
+                .attr('r', '5')
+                .attr('class', function(d){
+                  return d.type == 'aggregate' ? 'mg_l' : 'mg_r'
+                })
+              goal.append('circle')
+                .attr('cx', function(d){
+                  return gs(d.value.conc);
+                })
+                .attr('cy', this.cell.height/2)
+                .attr('r', '5')
+                .attr('class', function(d){
+                  if (d.value.made == d.value.conc)
+                    return d.type == 'aggregate' ? 'grey' : 'grey_f';
+                  return d.type == 'aggregate' ? 'cg_l' : 'cg_r';
+                })
+              break;
+            }
+          }
         }
 
     };
@@ -345,26 +345,26 @@ class Table {
 
         //Only update list for aggregate clicks, not game clicks
         if (i.type == 'game'){
-            this.updateTable();
-        }else{
-            if (open_row.indexOf(i.value) == -1){
-                open_row.push(i.value);
-                var began = data.slice(0,(index+1));
-                var games = data[index].value.games;
-                var end = data.slice((index+1))
-            } else{
-                open_row.splice(open_row.indexOf(i.value), 1);
-                var began = data.slice(0,(index+1));
-                var games_number = data[index].value.games.length;
-                console.log(games_number)
-                var games = [];
-                var end = data.slice((index+games_number+1))
-            }
-            console.log(open_row)
-            data = (began.concat(games, end));
-            console.log(data)
-        //tableElements = tableElements.slice(1);
-            this.updateTable();
+          this.updateTable();
+        }
+        else{
+          if (open_row.indexOf(i.value) == -1){
+            open_row.push(i.value);
+            var began = data.slice(0,(index+1));
+            var games = data[index].value.games;
+            var end = data.slice((index+1))
+          }
+          else
+          {
+            open_row.splice(open_row.indexOf(i.value), 1);
+            var began = data.slice(0,(index+1));
+            var games_number = data[index].value.games.length;
+            console.log(games_number)
+            var games = [];
+            var end = data.slice((index+games_number+1))
+          }
+          data = began.concat(games, end);
+          this.updateTable();
         }
 
     }
@@ -378,13 +378,8 @@ class Table {
         // ******* TODO: PART IV *******
         data = tableElements;
         this.updateTable();
-            // ******* TODO: PART IV *******
 
         }
-
-        // update_tree(row){
-        //   this.tree.updateTree(row);
-        // }
 
 
 }

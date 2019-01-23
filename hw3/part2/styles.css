@@ -81,8 +81,9 @@ tbody tr .game {
     /*background-color: #dbdbdb;*/
 /*}*/
 
+/* change label color to black */
 .label{
-    fill: #ffffff;
+    fill: #000000;
     font: 14px sans-serif;
 }
 
