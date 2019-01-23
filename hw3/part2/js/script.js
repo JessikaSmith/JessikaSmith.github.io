@@ -19,7 +19,7 @@ d3.json('data/fifa-matches.json',function(error,data){
             d.ParentGame = j[+d.ParentGame].id
           }
         })
-
+        console.log(csvData);
         //Create Tree Object
         let tree = new Tree();
         tree.createTree(csvData);

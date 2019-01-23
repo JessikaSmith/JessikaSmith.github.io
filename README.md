@@ -7,6 +7,7 @@ Email: mariyaxod@yandex.ru
 * [hw2 Table](http://jessikasmith.github.io/hw2/table.html)
 * [hw2 Barchart](http://jessikasmith.github.io/hw2/barchart.html)  
 * [hw3 Part 1](http://jessikasmith.github.io/hw3/part1/hw3.html)
+* [hw3 Part 2](http://jessikasmith.github.io/hw3/part2/hw3-part2.html)
 
 ## TODO
 
