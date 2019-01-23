@@ -29,6 +29,7 @@ Email: mariyaxod@yandex.ru
 - [x] Change urls;
 - [ ] Add animation;
 - [x] Fix sorting for numerical columns;
+- [ ] Color bars by country;
 
 
 ### Lab3:
