@@ -14,12 +14,10 @@ d3.json('data/fifa-matches.json',function(error,data){
             d.id = d.Team + d.Opponent + i;
         });
 
-        csvData.forEach(function(d, i , j){
-          if (d.ParentGame){
-            d.ParentGame = j[+d.ParentGame].id
-          }
-        })
-        console.log(csvData);
+        csvData.forEach(function(d, i, j){
+          if (d.ParentGame)
+            d.ParentGame = j[+d.ParentGame].id;
+        });
         //Create Tree Object
         let tree = new Tree();
         tree.createTree(csvData);

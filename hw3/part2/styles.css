@@ -1,3 +1,32 @@
+.mg_l{
+    fill: blue;
+}
+
+.mg_r{
+    fill: white;
+    stroke-width: 3px;
+    stroke: blue;
+}
+
+.cg_l{
+    fill: red;
+}
+
+.cg_r{
+    fill: white;
+    stroke-width: 3px;
+    stroke: red;
+}
+
+.grey{
+    fill: grey;
+}
+
+.grey_f{
+    fill: none;
+    stroke-width: 3px;
+    stroke: grey;
+}
 
 table {
     border-collapse: collapse;
@@ -151,5 +180,3 @@ header {
     padding: 0.5em;
     float: left;
 }
-
-
