@@ -1,3 +1,27 @@
+#xAxis path,
+#yAxis path {
+    fill: none;
+    stroke: black;
+}
+
+#xAxis text,
+#yAxis text {
+    font-size: 14px;
+
+}
+
+#bar-chart {
+    width: 500px;
+    margin-right: 20px;
+    float: left;
+
+}
+
+.view {
+    padding: 0.5em;
+
+}
+
 body{
   font-family: 'Helvetica Neue', Helvetica;
   font-weight: 300;

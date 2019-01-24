@@ -4,6 +4,12 @@
 // #ab40e8 - Oceania
 // #ed2a1b - Europe
 
+// class Barchart{
+//
+// }
+
+
+colores_g = ["#95d261", "#64b7e7", "#ed942e", "#ab40e8", "#ed2a1b"]
 function colors(n) {
   var colores_g = ["#95d261", "#64b7e7", "#ed942e", "#ab40e8", "#ed2a1b"];
   return colores_g[n % colores_g.length];
@@ -113,163 +119,121 @@ function aggregator(data) {
   }
 }
 
-function initBarchartVars(data){
-  margin = {top: 50, bottom: 5, left: 50, right: 10};
-  // Fix this
-  textW = 10;
-  barH = 20;
-  width = 900 - margin.left - margin.right;
-  height = barH*data.length - margin.top - margin.bottom;
-  console.log(height);
-  xScale = d3.scaleLinear().range([0, width]);
-  yScale = d3.scaleBand().range([0, barH*data.length]);
-  encoder = d3.select('input[name=encoder]:checked').node().value;
-  max = d3.max(data, function(d){
-      return d[encoder];
-  });
-  min = 0;
-  xScale = d3.scaleLinear().domain([0, max])
-      .range([textW, width]);
+function updateBarchart(data){
 
-  // Add normal length
-  // yScale = d3.scaleBand()
-  //   .rangeRound([0, height*data.length]).padding(.1);
-  yAxis = d3.axisLeft()
-    .scale(yScale);
-
-  aggVar = d3.select('input[name="aggregate"]:checked').node().value;
-  sortVar = d3.select('input[name=sort]:checked').node().value;
-
-  if (aggVar === "continent" && sortVar === "Name"){
-      sortVar = "Continent"
-  };
-};
-
-function initBarchart(data){
-  initBarchartVars(data);
-
-  var yW = yScale.bandwidth();
-  console.log(yW);
-
-  var svg = d3.select("body").append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", yScale.range()[1]+25+'px');
-
-  svg.append("g")
-    .call(yAxis);
-
-
+  // sort data
+  var sortVar = d3.select('input[name="sort"]:checked').node().value;
   data.sort(function(x, y){
      return d3.ascending(x[sortVar], y[sortVar]);
   })
+  var aggVar = d3.select('input[name="aggregate"]:checked').node().value;
+  if (aggVar === "continent" && sortVar === "Name"){
+      sortVar = "Continent";
+  }
+  console.log(data);
+  var encoder = d3.select('input[name=encoder]:checked').node().value;
 
+  var width = d3.select('#barchart').attr("width"),
+    height = d3.select('#barchart').attr("height"),
+    margin = {top: 10, right: 10, bottom: 10, left: 10};
+  var svg = d3.select('#barchart')
+    .attr('width', width-margin.left-margin.right)
+    .attr('height', height)
+    .attr('transform', 'translate(' + margin.right + ',' + margin.top + ')');
 
-  var bar = svg.selectAll('g')
-   .data(data)
-   .enter()
-   .append('g')
-   .attr('transform', function(d, i) {
-      return "translate(0," + i * barH + ")";
-    });
+  maxVal = d3.max(data, d => d[encoder])
 
-   bar.append('rect').transition().duration(800)
-       .attr('width', function(d) {
-         return xScale(d[encoder]); })
-       .attr('height',  barH - 2)
-       .attr('x', 300);
-       // .attr('fill', function(d){
-       //   return colors(d[encoder], max);
-       // });
+  // define scales
+  var xScale = d3.scaleLinear()
+    .domain([0, maxVal])
+    .range([0, width-margin.right]);
 
-   bar.append('text')
-       .text(function(d){
-           return d[sortVar]
-       })
-       .attr('y', function(d, i){
-           return i + 9;
-       })
-       .attr('class', 'lable');
+  // var variable = data.map(function(d){
+  //   return d[aggVar]
+  // })
+  var yScale = d3.scaleBand()
+    .range([height,0])
+    .padding(0.1);
 
-    bar.selectAll("text")
-      .attr("dx", "30px");
+  yScale.domain(data.map(function(d){
+      return d[aggVar];
+    }))
 
-    var t = d3.selectAll('rect');
-    t.attr("fill", function(d, i) {
-      return colors(i);
-    });
-     d3.selectAll("path.domain").remove();
-}
+  var xAxis = d3.axisBottom(xScale);
+  var yAxis = d3.axisLeft(yScale);
 
-function updateBarchart(data){
-  d3.select("svg")
-    .selectAll("g")
-    .remove()
-  initBarchartVars(data);
-  var svg = d3.select("svg");
-
-  svg.attr("width", width+margin.left+margin.right)
-      .attr("height", yScale.range()[1] + 25 + 'px');
-
-  svg.append("g")
+  svg.select('#yAxis')
+    // .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
     .call(yAxis);
+    // .selectAll('text')
+    // .style("text-anchor", "end")
+    // .attr("dx", "-12px")
+    // .attr("dy", "-5px");
 
-    if (sortVar == "Name"){
-      data.sort(function(x, y){
-         return d3.ascending(x[sortVar], y[sortVar]);
-      })
-    }
-    else{
-      data.sort(function(x, y){
-        return d3.descending(x[sortVar], y[sortVar]);
-      })
-    };
+  svg.select('#xAxis')
+      .attr('transform', 'translate(' + margin.left + ',' + (height-150-margin.bottom) + ')')
+      .call(xAxis)
+      .selectAll('text')
+      .style("text-anchor", "end")
+      .attr("dx", "-12px")
+      .attr("dy", "-5px")
+      .attr("transform", "rotate(-90)" );
 
-    // Add animation by introducing prev bars
+  // color = d3.scaleOrdinal(d3['schemeSet1'])
+  //   .domain(continents);
 
-  var bar = svg.selectAll('g')
-   .data(data)
-   .enter()
-   .append('g')
-   .attr('transform', function(d, i) {
-      return "translate(0," + i * barH + ")";
-    });
+  color = d3.scaleLinear()
+      .domain([0, maxVal])
+      .range([d3.rgb("#95B4E2"), d3.rgb('#092D62')]);
 
+  var bars = svg.select('#bars')
+    .selectAll('rect.bar')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('width', function(d){
+      return xScale(d[encoder]);
+    })
+    .attr('height', yScale.bandwidth())
+    .attr('x', function(d){
+      return xScale(0);
+    })
+    .attr('y', function(d){
+      return yScale(d[aggVar]);
+    })
+    .style('fill', function(d){
+       return d3.rgb(colores_g[continents.indexOf(d.Continent)])
+     })
+     // yAxisG.selectAll('.tick line').remove();
 
-   bar.append('rect').transition().duration(900)
-       .attr('width', function(d) {
-         console.log(d[encoder])
-         return xScale(d[encoder]); })
-       .attr('height',  barH - 2)
-       .attr('x', 250);
-       // .attr('fill', function(d){
-       //   return colors(d[encoder], max);
-       // });
-
-   bar.append('text')
-       .text(function(d){
-           return d[aggVar];
+     var old_bars = d3.select('#bars').selectAll('rect.bar')
+       .transition().duration(350)
+       .attr('class', 'bar')
+       .attr('height', yScale.bandwidth())
+       .attr('width', function(d){
+         return xScale(d[encoder]);
        })
-       .attr('y', function(d, i){
-           return i + 9;
+       .attr('x', function(d){
+         return xScale(0);
        })
-       .attr('class', 'lable');
+       .attr('y', function(d){
+         return yScale(d[aggVar]);
+       })
+       // TODO: indexOf
+       .style('fill', function(d){
+         return d3.rgb(colores_g[continents.indexOf(d.Continent)])
+       });
 
-     bar.selectAll("text")
-       .attr("dx", "15px")
-       .attr("text-align","right");
-
-    var t = d3.selectAll('rect');
-    t.attr("fill", function(d, i) {
-      return colors(i);
-    });
-     d3.selectAll("path.domain").remove();
-};
+}
 
 var url = "json_files/countries_1995_2012.json"
 d3.json(url, function(error, data){
   barchartData = prepare_columns(data);
+  continents = d3.map(barchartData, function(d){
+    return d.Continent;}).keys()
   yearsData = getYear(barchartData);
-  initBarchart(filterRows(aggregator(yearsData)));
+  updateBarchart(filterRows(aggregator(yearsData)));
 });
 
 function change(){
