@@ -119,8 +119,11 @@ function aggregator(data) {
   }
 }
 
-function updateBarchart(data){
-
+function updateBarchart(data, i){
+  if (i > 0){
+    d3.selectAll('g').remove();
+    d3.selectAll('svg').remove();
+  }
   // sort data
   var sortVar = d3.select('input[name="sort"]:checked').node().value;
   var aggVar = d3.select('input[name="aggregate"]:checked').node().value;
@@ -128,39 +131,46 @@ function updateBarchart(data){
     sortVar = "Continent";
   }
   data.sort(function(x, y){
-     return d3.descending(x[sortVar], y[sortVar]);
+     return d3.ascending(x[sortVar], y[sortVar]);
   })
+  if (sortVar == "Name"){
+    data.sort(function(x, y){
+       return d3.descending(x[sortVar], y[sortVar]);
+    })
+  };
 
-  console.log(data);
   var encoder = d3.select('input[name=encoder]:checked').node().value;
 
   // fix bar height
-  var barH = 10;
-
-  var width = d3.select('#barchart').attr("width"),
-    height = data.length * barH + 100*data.length;
+  var barH = 15;
+  console.log(data.length)
+  var margin = {top: 20, right: 150, bottom: 150, left: 150},
+    width = 1500 - margin.left - margin.right,
+    height = data.length * barH + barH*data.length/2 - margin.top - margin.bottom;
     // height = d3.select('#barchart').attr("height"),
-    margin = {top: 10, right: 30, bottom: 150, left: 150};
 
   console.log(data.length)
-  var svg = d3.select('#barchart')
-    .attr('width', width)
-    .attr('height', height)
-    .attr('transform', 'translate(' + margin.right + ',' + margin.top + ')');
+  var svg = d3.select('#bar-chart')
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom);
+    //.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   maxVal = d3.max(data, d => d[encoder])
 
   // define scales
   var xScale = d3.scaleLinear()
     .domain([0, maxVal])
-    .range([margin.left, width-margin.right]);
+    .range([0, width]);
 
   // var variable = data.map(function(d){
   //   return d[aggVar]
   // })
   var yScale = d3.scaleBand()
-    .range([height-margin.bottom,0])
-    .padding(0.1);
+    .range([height,0])
+
+  bandCent = yScale.bandwidth()/2;
+  //yScale.padding(bandCent);
 
   yScale.domain(data.map(function(d){
       return d[aggVar];
@@ -179,72 +189,67 @@ function updateBarchart(data){
 
   var yAxis = d3.axisLeft(yScale);
 
-  svg.select('#yAxis')
-    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
-    .call(yAxis)
-    .selectAll('text')
-    .text(d => d[aggVar])
-    .style("text-anchor", "end")
-    .attr("dx", "-10px")
-    .attr("dy", "5px");
+  g = svg.append('g')
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.select('#yAxis')
-    .call(yAxis)
-    .selectAll('text');
+  // svg.select('#yAxis')
+  //   .attr('transform', 'translate(' + margin.right + ',' + margin.top + ')')
+  //   .call(yAxis);
+    // .selectAll('text')
+    // .text(d => d[aggVar])
+    // .style("text-anchor", "end")
+    // .attr("dx", "-10px")
+    // .attr("dy", "5px");
 
-  svg.select('#xAxis')
-      .attr('transform', 'translate(' + margin.left + ',' + (height-margin.bottom) + ')')
+    // svg.select('#yAxis')
+    // .call(yAxis)
+    // .selectAll('text');
+
+
+
+  svg.append("g")
+      .attr('transform', 'translate(' + margin.right + ',' + (height + 20) + ')')
       .call(xAxis)
       .selectAll('text')
-      .style("text-anchor", "end")
-      .attr("dx", "-15px")
+      // .style("text-anchor", "end")
+      .attr("dx", "-40px")
       .attr("dy", "-5px")
       .attr("transform", "rotate(-90)" );
 
   // color = d3.scaleOrdinal(d3['schemeSet1'])
   //   .domain(continents);
 
-  color = d3.scaleLinear()
-      .domain([0, maxVal])
-      .range([d3.rgb("#95B4E2"), d3.rgb('#092D62')]);
-
-  var bars = svg.select('#bars')
-    .selectAll('rect.bar')
+   var groups = g.append('g')
+    .selectAll("text")
     .data(data)
     .enter()
-    .append('rect')
-    .attr('class', 'bar')
-    .attr('width', function(d){
-      return xScale(d[encoder]);
-    })
-    .attr('height', barH)
-    .attr('x', function(d){
-      return xScale(0);
-    })
-    .attr('y', function(d){
-      return yScale(d[aggVar]);
-    })
-    .style('fill', function(d){
-       return d3.rgb(colores_g[continents.indexOf(d.Continent)])
-     })
-     // yAxisG.selectAll('.tick line').remove();
+    .append("g");
 
-   var old_bars = d3.select('#bars').selectAll('rect.bar')
+  groups.append("text")
+    .text(d => d[aggVar])
+    .attr("x", xScale(0) - 15)
+       .attr("y", function (d) {
+           return yScale(d[aggVar]) + 9;
+       })
+       .attr("dy", ".34em")
+       .attr("text-anchor", "end");
+
+   var bars = groups
+    .append('rect')
      .transition().duration(600)
-     .attr('class', 'bar')
      .attr('width', function(d){
        return xScale(d[encoder]);
      })
      .attr('height', barH)
-     .attr('x', function(d){
-       return xScale(0);
-     })
+     .attr('x', xScale(0))
      .attr('y', function(d){
        return yScale(d[aggVar]);
      })
      .style('fill', function(d){
        return d3.rgb(colores_g[continents.indexOf(d.Continent)])
      });
+
+     bars.select("rect");
 
 }
 
@@ -254,9 +259,10 @@ d3.json(url, function(error, data){
   continents = d3.map(barchartData, function(d){
     return d.Continent;}).keys()
   yearsData = getYear(barchartData);
-  updateBarchart(filterRows(aggregator(yearsData)));
+  updateBarchart(filterRows(aggregator(yearsData)), 0);
+  updateBarchart(filterRows(aggregator(yearsData)), 1);
 });
 
 function change(){
-  updateBarchart(filterRows(aggregator(getYear(barchartData))));
+  updateBarchart(filterRows(aggregator(getYear(barchartData))), 1);
 }
