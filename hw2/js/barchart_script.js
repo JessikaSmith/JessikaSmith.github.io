@@ -146,8 +146,11 @@ function updateBarchart(data, i){
   console.log(data.length)
   var margin = {top: 20, right: 150, bottom: 150, left: 150},
     width = 1500 - margin.left - margin.right,
-    height = data.length * barH + barH*data.length/2 - margin.top - margin.bottom;
-    // height = d3.select('#barchart').attr("height"),
+    height = data.length * barH + barH*data.length/2;
+
+    console.log('========== PARAMS ==========')
+    console.log(width);
+    console.log(height);
 
   console.log(data.length)
   var svg = d3.select('#bar-chart')
