@@ -123,21 +123,28 @@ function updateBarchart(data){
 
   // sort data
   var sortVar = d3.select('input[name="sort"]:checked').node().value;
-  data.sort(function(x, y){
-     return d3.ascending(x[sortVar], y[sortVar]);
-  })
   var aggVar = d3.select('input[name="aggregate"]:checked').node().value;
-  if (aggVar === "continent" && sortVar === "Name"){
-      sortVar = "Continent";
+  if (aggVar === "Continent" && sortVar === "Name"){
+    sortVar = "Continent";
   }
+  data.sort(function(x, y){
+     return d3.descending(x[sortVar], y[sortVar]);
+  })
+
   console.log(data);
   var encoder = d3.select('input[name=encoder]:checked').node().value;
 
+  // fix bar height
+  var barH = 10;
+
   var width = d3.select('#barchart').attr("width"),
-    height = d3.select('#barchart').attr("height"),
-    margin = {top: 10, right: 10, bottom: 10, left: 10};
+    height = data.length * barH + 100*data.length;
+    // height = d3.select('#barchart').attr("height"),
+    margin = {top: 10, right: 30, bottom: 150, left: 150};
+
+  console.log(data.length)
   var svg = d3.select('#barchart')
-    .attr('width', width-margin.left-margin.right)
+    .attr('width', width)
     .attr('height', height)
     .attr('transform', 'translate(' + margin.right + ',' + margin.top + ')');
 
@@ -146,36 +153,51 @@ function updateBarchart(data){
   // define scales
   var xScale = d3.scaleLinear()
     .domain([0, maxVal])
-    .range([0, width-margin.right]);
+    .range([margin.left, width-margin.right]);
 
   // var variable = data.map(function(d){
   //   return d[aggVar]
   // })
   var yScale = d3.scaleBand()
-    .range([height,0])
+    .range([height-margin.bottom,0])
     .padding(0.1);
 
   yScale.domain(data.map(function(d){
       return d[aggVar];
     }))
 
-  var xAxis = d3.axisBottom(xScale);
+  switch(encoder){
+    case 'Population':{
+      xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.format(",.0f"));
+      break;
+    }
+    case 'GDP': {
+      xAxis = d3.axisBottom(xScale).ticks(7).tickFormat(d3.format(".0s"));
+      break;
+    }
+  }
+
   var yAxis = d3.axisLeft(yScale);
 
   svg.select('#yAxis')
-    // .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
-    .call(yAxis);
-    // .selectAll('text')
-    // .style("text-anchor", "end")
-    // .attr("dx", "-12px")
-    // .attr("dy", "-5px");
+    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+    .call(yAxis)
+    .selectAll('text')
+    .text(d => d[aggVar])
+    .style("text-anchor", "end")
+    .attr("dx", "-10px")
+    .attr("dy", "5px");
+
+    svg.select('#yAxis')
+    .call(yAxis)
+    .selectAll('text');
 
   svg.select('#xAxis')
-      .attr('transform', 'translate(' + margin.left + ',' + (height-150-margin.bottom) + ')')
+      .attr('transform', 'translate(' + margin.left + ',' + (height-margin.bottom) + ')')
       .call(xAxis)
       .selectAll('text')
       .style("text-anchor", "end")
-      .attr("dx", "-12px")
+      .attr("dx", "-15px")
       .attr("dy", "-5px")
       .attr("transform", "rotate(-90)" );
 
@@ -195,7 +217,7 @@ function updateBarchart(data){
     .attr('width', function(d){
       return xScale(d[encoder]);
     })
-    .attr('height', yScale.bandwidth())
+    .attr('height', barH)
     .attr('x', function(d){
       return xScale(0);
     })
@@ -207,23 +229,22 @@ function updateBarchart(data){
      })
      // yAxisG.selectAll('.tick line').remove();
 
-     var old_bars = d3.select('#bars').selectAll('rect.bar')
-       .transition().duration(350)
-       .attr('class', 'bar')
-       .attr('height', yScale.bandwidth())
-       .attr('width', function(d){
-         return xScale(d[encoder]);
-       })
-       .attr('x', function(d){
-         return xScale(0);
-       })
-       .attr('y', function(d){
-         return yScale(d[aggVar]);
-       })
-       // TODO: indexOf
-       .style('fill', function(d){
-         return d3.rgb(colores_g[continents.indexOf(d.Continent)])
-       });
+   var old_bars = d3.select('#bars').selectAll('rect.bar')
+     .transition().duration(600)
+     .attr('class', 'bar')
+     .attr('width', function(d){
+       return xScale(d[encoder]);
+     })
+     .attr('height', barH)
+     .attr('x', function(d){
+       return xScale(0);
+     })
+     .attr('y', function(d){
+       return yScale(d[aggVar]);
+     })
+     .style('fill', function(d){
+       return d3.rgb(colores_g[continents.indexOf(d.Continent)])
+     });
 
 }
 
