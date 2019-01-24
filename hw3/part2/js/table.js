@@ -65,6 +65,7 @@ class Table {
 
         var goalsMade = teamGoalsMax.value['Goals Made'];
 
+
         var teamGamesMax = this.teamData.reduce(function(i, j) {
           return i.value['TotalGames'] > j.value['TotalGames'] ? i : j;
         });
@@ -115,57 +116,63 @@ class Table {
         var headers = d3.select('thead').select('.head').selectAll('td');
         headers.on("click", function(){
         self.collapseList(); //check
-
-                var temp = data;
-                console.log(temp)
-                var dn = d3.select(this).text();
-                temp.sort(function(a, b) {
-                    if (dn == 'Team'){
-                        if (sortAscending){
-                            return d3.ascending(a.key, b.key)
-                        } else {
-                            return d3.descending(a.key, b.key)
-                        }
-                    }
-                    if (dn == 'Wins'){
-                        if (sortAscending){
-                            return d3.ascending(a.value.Wins, b.value.Wins)
-                        } else {
-                            return d3.descending(a.value.Wins, b.value.Wins)
-                        }
-                    }
-                    if (dn == 'Losses'){
-                        if (sortAscending){
-                            return d3.ascending(a.value.Losses, b.value.Losses)
-                        } else {
-                            return d3.descending(a.value.Losses, b.value.Losses)
-                        }
-                    }
-                    if (dn == 'Total Games'){
-                        if (sortAscending){
-                            return d3.ascending(a.value.TotalGames, b.value.TotalGames)
-                        } else {
-                            return d3.descending(a.value.TotalGames, b.value.TotalGames)
-                        }
-                    }
-                    if (dn == ' Goals '){
-                        if (sortAscending){
-                            return d3.ascending((a.value['Delta Goals']), (b.value['Delta Goals']))
-                        } else {
-                            return d3.descending((a.value['Delta Goals']), (b.value['Delta Goals']))
-                        }
-                    }
-                    if (dn == 'Round/Result'){
-                        if (sortAscending){
-                            return d3.ascending(a.value.Result.ranking, b.value.Result.ranking)
-                        } else {
-                            return d3.descending(a.value.Result.ranking, b.value.Result.ranking)
-                        }
-                    }
-                });
-                sortAscending = !sortAscending;
-                data = temp;
-                self.updateTable();
+        var temp = data;
+        console.log(temp)
+        var dn = d3.select(this).text();
+        
+        // insert sorting
+        temp.sort(function(a, b) {
+          if (dn == 'Team'){
+            if (sortAscending){
+              return d3.ascending(a.key, b.key)
+            }
+            else {
+              return d3.descending(a.key, b.key)
+            }
+          }
+          if (dn == 'Wins'){
+            if (sortAscending){
+              return d3.ascending(a.value.Wins, b.value.Wins)
+            }
+            else {
+              return d3.descending(a.value.Wins, b.value.Wins)
+            }
+          }
+          if (dn == 'Losses'){
+            if (sortAscending){
+              return d3.ascending(a.value.Losses, b.value.Losses)
+            }
+            else {
+              return d3.descending(a.value.Losses, b.value.Losses)
+            }
+          }
+          if (dn == 'Total Games'){
+            if (sortAscending){
+              return d3.ascending(a.value.TotalGames, b.value.TotalGames)
+            } else {
+              return d3.descending(a.value.TotalGames, b.value.TotalGames)
+            }
+          }
+          if (dn == ' Goals '){
+            if (sortAscending){
+              return d3.ascending((a.value['Delta Goals']), (b.value['Delta Goals']))
+            }
+            else {
+              return d3.descending((a.value['Delta Goals']), (b.value['Delta Goals']))
+            }
+          }
+          if (dn == 'Round/Result'){
+            if (sortAscending){
+              return d3.ascending(a.value.Result.ranking, b.value.Result.ranking)
+            }
+            else {
+              return d3.descending(a.value.Result.ranking, b.value.Result.ranking)
+            }
+          }
+        });
+        sortAscending = !sortAscending;
+        data = temp;
+        self.updateTable();
         })
     }
 

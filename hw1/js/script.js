@@ -61,7 +61,7 @@ function getAuthorQuotes(){
   author_quotes = []
   var selected_author = author_list.options[author_list.selectedIndex].value;
   console.log(selected_author);
-  if (selected_author != "All"){
+  if (selected_author != "all"){
     for (let i = 0; i < myObj.length; i++){
       if (myObj[i].author == selected_author){
         author_quotes.push(myObj[i].quote)

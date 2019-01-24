@@ -83,7 +83,7 @@ class Tree {
           .attr("r", 10);
 
         node.append("text")
-          .attr("dy", ".35em")
+          .attr("dy", ".34em")
           .attr("x", function(d) { return d.children ? -10 : 10; })
           .style("text-anchor", function(d) {
           return d.children ? "end" : "start"; })
