@@ -181,11 +181,11 @@ function updateBarchart(data, i){
 
   switch(encoder){
     case 'Population':{
-      xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.format(",.0f"));
+      xAxis = d3.axisBottom(xScale).ticks(3).tickFormat(d3.format(",.0f"));
       break;
     }
     case 'GDP': {
-      xAxis = d3.axisBottom(xScale).ticks(7).tickFormat(d3.format(".0s"));
+      xAxis = d3.axisBottom(xScale).ticks(3).tickFormat(d3.format(".0s"));
       break;
     }
   }

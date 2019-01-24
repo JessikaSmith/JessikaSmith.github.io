@@ -13,11 +13,13 @@ several_test_quotes = [
 // get selector object
 var x = document.getElementById("authors");
 
+myObj = [];
 // get list of authors and add them to selector
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
+      window.myObj = JSON.parse(this.responseText);
+      console.log(myObj);
       for (let i = 0; i < myObj.length; i++){
         flag = true;
         m = document.getElementById('authors');
@@ -48,36 +50,30 @@ function testFunction() {
 
 // load new random quote
 function newQuoteFunction(){
-  document.getElementById("authors").selectedIndex = "0";
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var myObj = JSON.parse(this.responseText);
-          var random = Math.floor(Math.random() * myObj.length)
-          document.getElementById("quote").innerHTML = myObj[random].quote + '” –' + myObj[random].author;
-      }
-  };
-  xmlhttp.open("GET", path_to_json, true);
-  xmlhttp.send();
+  console.log(myObj);
+  getAuthorQuotes();
 }
+
+author_list = document.getElementById('authors');
 
 // author selection
 function getAuthorQuotes(){
-  var author_list = document.getElementById('authors');
-  console.log(author_list.options[author_list.selectedIndex].value);
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var myObj = JSON.parse(this.responseText);
-          for (let i = 0; i < myObj.length; i++){
-            if (myObj[i].author === author_list.options[author_list.selectedIndex].value){
-              document.getElementById("quote").innerHTML = myObj[i].quote + '” –' + myObj[i].author;
-              break;
-            }
-        }
-      };
-  };
-  xmlhttp.open("GET", path_to_json, true);
-  xmlhttp.send();
+  author_quotes = []
+  var selected_author = author_list.options[author_list.selectedIndex].value;
+  console.log(selected_author);
+  if (selected_author != "All"){
+    for (let i = 0; i < myObj.length; i++){
+      if (myObj[i].author == selected_author){
+        author_quotes.push(myObj[i].quote)
+      }
+    };
+    var random = Math.floor(Math.random() * author_quotes.length);
+    console.log(random);
+    document.getElementById("quote").innerHTML = author_quotes[random] + '” –' + selected_author;
+  }
+  else{
+    var random = Math.floor(Math.random() * myObj.length)
+    document.getElementById("quote").innerHTML = myObj[random].quote + '” –' + myObj[random].author;
+  }
 
 }
